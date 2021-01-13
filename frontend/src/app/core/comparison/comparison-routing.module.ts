@@ -1,11 +1,11 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
-import { PatentBrowserComponent } from './patent-browser/patent-browser.component';
+import { ComparisonBrowserComponent } from './comparison-browser/comparison-browser.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: PatentBrowserComponent
+    component: ComparisonBrowserComponent
   }
 ];
 
@@ -15,6 +15,6 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class PatentRoutingModule {
+export class ComparisonRoutingModule {
 
 }

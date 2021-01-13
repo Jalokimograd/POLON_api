@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { PatentBrowserDataService } from '../patent-browser-data.service';
+import { PatentBrowserDataService } from '../../../patent-browser-data.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { PatentDto } from '../../../../shared/model/dto/patent/patent.dto';
+import { PatentDto } from '../../../../../../shared/model/dto/patent/patent.dto';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
@@ -15,7 +15,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 export class PatentBrowserListComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  displayedColumns: string[] = ['number', 'date', 'country', 'productName', 'type', 'creators', 'units', 'actions'];
+  displayedColumns: string[] = ['number', 'date', 'country', 'productName', 'type', 'creators', 'units'];
   public tableDataSource = new MatTableDataSource<PatentDto>();
 
   constructor(public data: PatentBrowserDataService) {
