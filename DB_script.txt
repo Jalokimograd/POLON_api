@@ -1,0 +1,47 @@
+CREATE DATABASE `polon` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_polish_ci */
+
+CREATE TABLE `patents` (
+ `id` varchar(130) COLLATE utf8_polish_ci NOT NULL,
+ `title` text COLLATE utf8_polish_ci NOT NULL,
+ `type` text COLLATE utf8_polish_ci NOT NULL,
+ `date` date NOT NULL,
+ PRIMARY KEY (`id`)
+) 
+
+CREATE TABLE `institutions` (
+ `id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
+ `institutionName` text COLLATE utf8_polish_ci NOT NULL,
+ PRIMARY KEY (`id`)
+)
+
+CREATE TABLE `persons` (
+ `id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
+ `calculatedEduLevel` text COLLATE utf8_polish_ci DEFAULT NULL,
+ `firstName` text COLLATE utf8_polish_ci NOT NULL,
+ `middleName` text COLLATE utf8_polish_ci DEFAULT NULL,
+ `lastNamePrefix` text COLLATE utf8_polish_ci DEFAULT NULL,
+ `lastName` text COLLATE utf8_polish_ci NOT NULL,
+ PRIMARY KEY (`id`)
+)
+
+CREATE TABLE `r_person_institution` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `person_id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
+ `institution_id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
+ PRIMARY KEY (`id`),
+ KEY `person_id` (`person_id`),
+ KEY `institution_id` (`institution_id`),
+ CONSTRAINT `r_person_institution_ibfk_1` FOREIGN KEY (`person_id`) REFERENCES `persons` (`id`),
+ CONSTRAINT `r_person_institution_ibfk_2` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`)
+)
+
+CREATE TABLE `r_patent_person` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `patent_id` varchar(130) COLLATE utf8_polish_ci NOT NULL,
+ `person_id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
+ PRIMARY KEY (`id`),
+ KEY `person_id` (`person_id`),
+ KEY `patent_id` (`patent_id`),
+ CONSTRAINT `r_patent_person_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `persons` (`id`),
+ CONSTRAINT `r_patent_person_ibfk_3` FOREIGN KEY (`patent_id`) REFERENCES `patents` (`id`)
+)

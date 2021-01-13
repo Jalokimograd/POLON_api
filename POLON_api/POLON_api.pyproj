@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a0c625e5-f3e1-46e7-8200-ce2d664cd259</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>POLON_api.py</StartupFile>
+    <StartupFile>Main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,22 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Fuzzy_name_matching.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySQL_connection.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POLON_api.py" />
+    <Compile Include="POLON_employees.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RADON_publications_api.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
