@@ -1,0 +1,19 @@
+<div class="px-2 d-flex" style="height: 600px" *ngIf="chartData$ | async as data">
+  <div class="w-100 d-flex" *ngIf="data.length > 0">
+    <ngx-charts-bar-horizontal
+      [results]="data"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [xAxisTickFormatting]='formatInteger'
+      [yAxisLabel]="yAxisLabel">
+    </ngx-charts-bar-horizontal>
+  </div>
+  <div class="w-100" *ngIf="data.length == 0">
+    <h4>Brak danych do wyświetlenia.</h4>
+  </div>
+</div>

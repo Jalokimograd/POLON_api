@@ -1,0 +1,57 @@
+<form [formGroup]="filtersForm">
+  <!--Mat-form field depends on range (range for admin page)-->
+  <mat-form-field class="w-100">
+    <mat-label>Przedział czasu</mat-label>
+    <mat-date-range-input [rangePicker]="picker" (focus)="picker.open()">
+      <input matStartDate formControlName="from" placeholder="Początek">
+      <input matEndDate formControlName="to" placeholder="Koniec">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker touchUi></mat-date-range-picker>
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Jednostki</mat-label>
+    <mat-chip-list #chipList aria-label="Wybór jednostki">
+      <mat-chip
+        *ngFor="let unit of selectedUnits"
+        [selectable]="false"
+        [removable]="true"
+        [value]="unit"
+        (removed)="removeUnit(unit)">
+        {{unit.name}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input
+        placeholder="Wpisz nazwę jednostki..."
+        #unitInput
+        [formControl]="unitCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit">
+        {{unit.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <div class="row text-center" *ngIf="filtersForm.hasError('range')">
+    <div class="col-12">
+      <mat-error>Field TO should be after field FROM</mat-error>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <button mat-raised-button class="w-100" color="primary" type="button" (click)="onSearchClick()">Szukaj</button>
+    </div>
+    <div class="col-6">
+      <button mat-stroked-button class="w-100"  type="button" (click)="resetForm()">Wyczyść</button>
+    </div>
+<!--    <div class="col-6">
+      <button mat-raised-button class="w-100" type="button" color="accent">
+        <mat-icon fontSet="fa" class="mr-2" fontIcon="fa-project-diagram">
+        </mat-icon>
+        Szczegóły
+      </button>
+    </div>-->
+  </div>
+</form>

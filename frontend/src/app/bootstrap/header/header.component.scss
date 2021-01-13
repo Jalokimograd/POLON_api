@@ -1,0 +1,12 @@
+@import '../../../styles/variables';
+
+.home-link {
+  text-decoration: none;
+  color: inherit;
+  &:hover {
+    color: $secondary-text-color;
+  }
+}
+.spacer {
+  flex: 1 1 auto;
+}

@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+  <a routerLink="/" class="home-link">
+    <mat-icon matListIcon fontSet="fa" class="mr-2" fontIcon="fa-home">
+    </mat-icon>
+    <span>TASS</span>
+  </a>
+  <span class="spacer"></span>
+<!--  <a routerLink="/patent" class="home-link mr-4" [ngClass]="{'active': router.isActive('patent', true)}">-->
+<!--    <mat-icon matListIcon fontSet="fa" class="mr-2" fontIcon="fa-microscope">-->
+<!--    </mat-icon>-->
+<!--    <span>Patenty</span>-->
+<!--  </a>-->
+<!--  <a routerLink="/publication" class="home-link" [ngClass]="{'active': router.isActive('publication', true)}">-->
+<!--    <mat-icon matListIcon fontSet="far" class="mr-2" fontIcon="fa-sticky-note">-->
+<!--    </mat-icon>-->
+<!--    <span>Publikacje</span>-->
+<!--  </a>-->
+</mat-toolbar>
+<div class="container-fluid p-1">
+  <ng-content></ng-content>
+</div>

@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-12 col-xl-2">
+    <mat-card>
+      <mat-card-title>
+        Filtry
+      </mat-card-title>
+      <mat-card-content>
+        <app-patent-browser-filter (filterChange)="onFilterChange($event)"
+                                   (clearClick)="onClearFilter()"></app-patent-browser-filter>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-12 col-xl-10 mt-2 mt-xl-0">
+    <mat-tab-group>
+      <mat-tab label="Przegląd">
+        <app-patent-browser-list></app-patent-browser-list>
+      </mat-tab>
+      <mat-tab label="Twórcy">
+        <app-patent-top10-creators></app-patent-top10-creators>
+      </mat-tab>
+      <mat-tab label="Jednostki">
+        <app-patent-top10-units></app-patent-top10-units>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
