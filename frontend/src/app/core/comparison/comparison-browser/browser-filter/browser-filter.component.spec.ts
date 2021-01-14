@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PatentBrowserFilterComponent } from './patent-browser-filter.component';
+import { BrowserFilterComponent } from './browser-filter.component';
 
 describe('PatentBrowserFilterComponent', () => {
-  let component: PatentBrowserFilterComponent;
-  let fixture: ComponentFixture<PatentBrowserFilterComponent>;
+  let component: BrowserFilterComponent;
+  let fixture: ComponentFixture<BrowserFilterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PatentBrowserFilterComponent ]
+      declarations: [ BrowserFilterComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PatentBrowserFilterComponent);
+    fixture = TestBed.createComponent(BrowserFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

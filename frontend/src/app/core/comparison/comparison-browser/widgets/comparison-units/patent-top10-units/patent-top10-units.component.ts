@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PatentBrowserDataService } from '../patent-browser-data.service';
+import { PatentBrowserDataService } from '../../../patent-browser-data.service';
 import { map } from 'rxjs/operators';
+import { NameValue } from '../../../shared/horizontal-bar/horizontal-bar.component';
 
 @Component({
   selector: 'app-patent-top10-units',
@@ -10,20 +11,6 @@ import { map } from 'rxjs/operators';
 })
 export class PatentTop10UnitsComponent implements OnInit {
   chartData$: Observable<NameValue[]>;
-
-  // options
-  showXAxis = true;
-  showYAxis = true;
-  gradient = false;
-  showLegend = true;
-  showXAxisLabel = true;
-  yAxisLabel = 'Jednostka';
-  showYAxisLabel = true;
-  xAxisLabel = 'Wystąpień';
-
-  colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
-  };
 
   constructor(public data: PatentBrowserDataService) {
     this.chartData$ = this.top10Units();
@@ -55,17 +42,4 @@ export class PatentTop10UnitsComponent implements OnInit {
       // map(e => e.slice(0, 10))
     );
   }
-
-  formatInteger(val): string {
-    if (val % 1 === 0) {
-      return val.toLocaleString();
-    } else {
-      return '';
-    }
-  }
-}
-
-interface NameValue {
-  name: string;
-  value: number;
 }

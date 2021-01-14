@@ -1,4 +1,4 @@
-<div class="px-2 d-flex" style="height: 600px" *ngIf="chartData$ | async as data">
+<div class="px-2 d-flex" style="height: 600px">
   <div class="w-100 d-flex" *ngIf="data.length > 0">
     <ngx-charts-bar-horizontal
       [results]="data"

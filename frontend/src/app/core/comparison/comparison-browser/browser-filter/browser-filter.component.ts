@@ -10,11 +10,11 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { filter, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-patent-browser-filter',
-  templateUrl: './patent-browser-filter.component.html',
-  styleUrls: ['./patent-browser-filter.component.scss']
+  selector: 'app-browser-filter',
+  templateUrl: './browser-filter.component.html',
+  styleUrls: ['./browser-filter.component.scss']
 })
-export class PatentBrowserFilterComponent implements OnInit {
+export class BrowserFilterComponent implements OnInit {
 
   @Output() public clearClick = new EventEmitter<any>();
   @Output() public filterChange = new EventEmitter<PatentBrowserFilter>();
