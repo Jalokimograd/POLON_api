@@ -18,17 +18,19 @@ import { NestedComponentsComponent } from './comparison-browser/shared/nested-co
 import { HorizontalBarComponent } from './comparison-browser/shared/horizontal-bar/horizontal-bar.component';
 import { ComparisonGraphComponent } from './comparison-browser/widgets/comparison-graph/comparison-graph.component';
 import { GraphWrapperComponent } from './comparison-browser/widgets/comparison-graph/graph-wrapper/graph-wrapper.component';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
 
 
 @NgModule({
   declarations: [ComparisonBrowserComponent, BrowserFilterComponent, PatentBrowserListComponent, PatentTop10CreatorsComponent, PatentTop10UnitsComponent, ComparisonOverviewComponent, ComparisonCreatorsComponent, ComparisonUnitsComponent, NestedComponentsComponent, HorizontalBarComponent, ComparisonGraphComponent, GraphWrapperComponent],
-    imports: [
-        CommonModule,
-        SharedModule,
-        ComparisonRoutingModule,
-        ReactiveFormsModule,
-        NgxChartsModule,
-    ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    ComparisonRoutingModule,
+    ReactiveFormsModule,
+    NgxChartsModule,
+    NgxGraphModule,
+  ],
   exports: [
     RouterModule
   ],
