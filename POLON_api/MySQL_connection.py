@@ -9,26 +9,14 @@ class Database:
             host="localhost",
             user="root",
             passwd="",
-            database="polon" # bez tego jesteśmy o stopień wyżej
+            database="tass" # bez tego jesteśmy o stopień wyżej
         )
 
         self.mycursor = self.mydb.cursor()
     
-    def get_table_statement(self):
-        sqlFormula = "SHOW CREATE TABLE authors"
-        self.mycursor.execute(sqlFormula)
-
-        myresult = self.mycursor.fetchall()
-
-        f = open("MySQL_script.txt", "a")
-        f.write(str(myresult))
-        f.close()
-
 
     def add_patents(self, patents):
-
-
-        sqlFormula = "INSERT INTO patents (id, title, type, date) VALUES (%s, %s, %s, %s)"
+        sqlFormula = "INSERT INTO patent (id, title, type, date) VALUES (%s, %s, %s, %s)"
         
         for k, v in patents.items():         
             patent = v[0]
@@ -49,8 +37,7 @@ class Database:
 
 
     def add_persons(self, persons):
-
-        sqlFormula = "INSERT INTO persons (id, calculatedEduLevel, firstName, middleName, lastNamePrefix, lastName) VALUES (%s, %s, %s, %s, %s, %s)"
+        sqlFormula = "INSERT INTO patent_author (id, calculated_edu_level, first_name, middle_name, last_name_prefix, last_name, publication_author_id ) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
         for k, v in persons.items():
             for person in v:
@@ -61,7 +48,8 @@ class Database:
                     pd['firstName'],
                     pd['middleName'],
                     pd['lastNamePrefix'],
-                    pd['lastName']
+                    pd['lastName'],
+                    person['author_id']
                     )
                 try:
                     self.mycursor.execute(sqlFormula, person_data)
@@ -73,27 +61,75 @@ class Database:
 
 
     def add_r_patent_person(self, r_Person_Patent):
-
-        sqlFormula = "INSERT INTO r_patent_person (patent_id, person_id) VALUES (%s, %s)"
+        sqlFormula = "INSERT INTO patent_authors (patents_id, persons_id) VALUES (%s, %s)"
 
         for position in r_Person_Patent:
             r = (
                 position['patent_id'],
                 position['person_id'],
                 )
-            self.mycursor.execute(sqlFormula, r)
+            try:
+                self.mycursor.execute(sqlFormula, r)
+            except mysql.connector.Error as err:
+                print("Problem ze wstawieniem do bazy: {}".format(err))
       
         self.mydb.commit()
         print("zapisano w BD r_Person_Patent")
 
 
+    def add_institutions(self, institutions):
+        sqlFormula = "INSERT INTO institution (id, title) VALUES (%s, %s)"
+
+        for k, position in institutions.items():
+            r = (
+                position['institutionUuid'],
+                position['institutionName']
+                )
+            try:
+                self.mycursor.execute(sqlFormula, r)
+            except mysql.connector.Error as err:
+                print("Problem ze wstawieniem do bazy: {}".format(err))
+            
+      
+        self.mydb.commit()
+        print("zapisano w BD institutions")
+
+    def add_r_patent_institution(self, r_patent_institution):
+        sqlFormula = "INSERT INTO patent_institutions (patents_id, institutions_id) VALUES (%s, %s)"
+
+        for position in r_patent_institution:
+            r = (
+                position['patent_id'],
+                position['institution_id']
+                )
+            try:
+                self.mycursor.execute(sqlFormula, r)
+            except mysql.connector.Error as err:
+                print("Problem ze wstawieniem do bazy: {}".format(err))
+      
+        self.mydb.commit()
+        print("zapisano w BD patent_institutions")
+
+
+    def add_r_person_institution(self, r_person_institution):
+        sqlFormula = "INSERT INTO patent_author_institutions (patent_authors_id , institutions_id) VALUES (%s, %s)"
+
+        for position in r_person_institution:
+            r = (
+                position['person_id'],
+                position['institution_id']
+                )
+            try:
+                self.mycursor.execute(sqlFormula, r)
+            except mysql.connector.Error as err:
+                print("Problem ze wstawieniem do bazy: {}".format(err))
+      
+        self.mydb.commit()
+        print("zapisano w BD r_person_institution")
+
 
     def add_publications(self, publications):
-
-
-        sqlFormula = "INSERT INTO publications (id, title, type, year) VALUES (%s, %s, %s, %s)"
-        sqlFormula2 = "INSERT INTO authors (id, name, lastName) VALUES (%s, %s, %s)"
-        sqlFormula3 = "INSERT INTO r_publication_author (publication_id, author_id) VALUES (%s, %s)"
+        sqlFormula = "INSERT INTO publication (id, title, type, year) VALUES (%s, %s, %s, %s)"
         
         print("Zapisywanie publikacji w BD")
         with tqdm(total=len(publications)) as pbar:
@@ -119,7 +155,7 @@ class Database:
 
     def add_authors(self, authors):
 
-        sqlFormula = "INSERT INTO authors (id, name, lastName) VALUES (%s, %s, %s)"
+        sqlFormula = "INSERT INTO publication_author (id, name, last_name) VALUES (%s, %s, %s)"
 
         print("Zapisywanie autorów publikacji w BD")
         with tqdm(total=len(authors)) as pbar:
@@ -143,7 +179,7 @@ class Database:
 
     def add_r_publication_author(self, r_Publication_Author):
 
-        sqlFormula = "INSERT INTO r_publication_author (publication_id, author_id) VALUES (%s, %s)"
+        sqlFormula = "INSERT INTO publication_authors (publication_id, author_id) VALUES (%s, %s)"
 
         print("Zapisywanie relacji autorów z publikacjami w BD")
         with tqdm(total=len(r_Publication_Author)) as pbar:
@@ -164,3 +200,4 @@ class Database:
       
             self.mydb.commit()
         print("zapisano w BD r_Publication_Author")
+

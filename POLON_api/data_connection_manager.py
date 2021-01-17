@@ -2,6 +2,10 @@ from itertools import product
 from fuzzywuzzy import fuzz
 import hashlib
 from tqdm import *
+from Downloading_Manager import Downloading_Manager
+
+class GetOutOfLoop( Exception ):
+    pass
 
 def to_str(s):
     if s is None:
@@ -10,7 +14,7 @@ def to_str(s):
 
 
 # Łączenie danych z dwóch zbiorów.
-def patents_person_connection(patents, persons):
+def patents_person_connection(patents, persons, persons_hash_list):
     container = []
 
     new_persons = 0
@@ -34,6 +38,9 @@ def patents_person_connection(patents, persons):
                                     'person_id': person['id'],
                                     'patent_id': patent['protectionUuid']
                                     })
+
+                                person['patents'].append(patent['protectionUuid'])
+                                inventor['id'] = person['id']
                                 finded = True
                                 break
 
@@ -45,6 +52,8 @@ def patents_person_connection(patents, persons):
                     new_person = {
                         'id': hash_key,
                         'calculatedEduLevel': '',
+                        'patents': [patent['protectionUuid']],
+                        'author_id': '',
                         'personalData': {
                             'firstName': inventor['firstName'],
                             'middleName': inventor['middleName'],
@@ -55,10 +64,12 @@ def patents_person_connection(patents, persons):
                             'employingInstitutionName': institution['institutionName']
                             } for institution in patent['applicants']]
                         }
+                    inventor['id'] = new_person['id']
 
                     if key not in persons:
                         persons[key] = []
                     persons[key].append(new_person)
+                    persons_hash_list[new_person['id']] = new_person
 
                     container.append({
                                 'id': len(container), 
@@ -133,65 +144,100 @@ def publications_authors_connection(publications, authors):
                     })
     return(container)
 
-def publications_person_connection(publications, authors, persons):
-    for k, v in persons.items():
-        for person in v:
-            pd = person['personalData']
-            lastName = to_str(pd['lastName']).lower()
-
-            if lastName not in authors:
-                continue
-
-            authors_with_lastname = authors[lastName]
-            for author in authors_with_lastname:
-                   
-                name_p = to_str(pd['firstName']) + ' ' + to_str(pd['middleName']) + ' ' + to_str(pd['lastName']) + ' ' + to_str(pd['lastNamePrefix'])
-                name_a = to_str(author['name']) + ' ' + to_str(author['lastName']) + ' ' + author['objectId']
-
-                similarity = get_similarity(pd, to_str(author['name']))
-
-                # Imiona są prawdopodobnie te same (Inicjał odpowiada imieniu itp.)
-                if similarity == 100:
-
-                    # Teraz trzeba sprawdzić, czy współpracownicy są podobni, lub dziedzina nauki
-                    
-
-                    print('===================================================================')
-                    print('person: ', name_p)
-                    print('author: ', name_a)
-                    print('similarity: ', similarity)
 
 
-def extract_institutions(persons):
+def get_connected_persons(person, patents):
+    container = {}
+
+    for patent_id in person['patents']:
+        patent = patents[patent_id][0]
+        for sub_worker in patent['inventors']:
+            container[sub_worker['id']] = 1
+    return(container)
+
+
+
+def publications_person_connection(patents, persons, persons_hash_list, downloading_manager):
+
+    print("Łączenie autorów patentów z autorami publikacji")
+    with tqdm(total=len(persons_hash_list)) as pbar:
+        for k, v in persons.items():
+            for person in v:
+                pbar.update(1)
+                potential_publications = []
+                connected_persons = get_connected_persons(person, patents)
+
+                if len(connected_persons) == 0:
+                    continue
+
+                pd = person['personalData']
+
+                publications = downloading_manager.get_publications(lastName=pd['lastName'])
+                w=3
+                # po wszystkich publikacjach z danym nazwiskiem sprawdzamy, czy imiona twórców sobie odpowiadają
+                for k, v in publications.items():
+                    publication = v[0]
+                    for author in publication['authors']:
+                        if author['lastName'] == pd['lastName'] and (get_similarity(pd, to_str(author['name'])) == 100):
+                            potential_publications.append([publication, 0, author['objectId']])
+                            break
+            
+                if len(potential_publications) == 0:
+                    continue
+                try:
+                    for publication_rank in potential_publications:
+                        publication = publication_rank[0]
+                        connection_power = publication_rank[1]
+                        for pub_author, pat_author_key in product(publication['authors'], connected_persons): 
+                            pat_author = persons_hash_list[pat_author_key]
+                            con_pd = pat_author['personalData']
+                            if connection_power > 10:
+                                raise GetOutOfLoop
+
+                            if pub_author['objectId'] == pat_author['author_id']:
+                                connection_power += 3
+                            elif pub_author['lastName'] == con_pd['lastName'] and (get_similarity(con_pd, to_str(pub_author['name'])) == 90):
+                                connection_power += 1
+                except GetOutOfLoop:
+                    pass
+                res = max(potential_publications, key = lambda i : i[1])
+                if res[1] > 0:               
+                    person['author_id'] = res[2]
+
+
+def extract_institutions(patents, persons):
     institutions = {}
+    r_patent_institution = []
     r_person_institution = []
-    disciplines = {}
+
+    for k, v in patents.items():
+        patent = v[0]
+        for institution in patent['applicants']:
+
+            institutions[institution['institutionUuid']] = {
+                'institutionUuid': institution['institutionUuid'],
+                'institutionName': institution['institutionName']
+                }
+
+            r_patent_institution.append({
+                'id': len(r_patent_institution), 
+                'patent_id': patent['protectionUuid'],
+                'institution_id': institution['institutionUuid']
+                })
 
     for k, v in persons.items():
         for person in v:
             for institution in person['employments']:
 
                 institutions[institution['employingInstitutionUuid']] = {
-                    'employingInstitutionUuid': institution['employingInstitutionUuid'],
-                    'employingInstitutionName': institution['employingInstitutionName']
+                    'institutionUuid': institution['employingInstitutionUuid'],
+                    'institutionName': institution['employingInstitutionName']
                     }
 
                 r_person_institution.append({
-                    'id': len(container), 
+                    'id': len(r_person_institution), 
                     'person_id': person['id'],
                     'institution_id': institution['employingInstitutionUuid']
                     })
 
-                declared = institution['declaredDisciplines']
-
-                disciplines[declared['firstDisciplineCode']] = {
-                    'firstDisciplineCode': declared['firstDisciplineCode'],
-                    'firstDisciplineName': declared['firstDisciplineName']
-                    }
-                disciplines[declared['secondDisciplineCode']] = {
-                    'secondDisciplineCode': declared['secondDisciplineCode'],
-                    'secondDisciplineName': declared['secondDisciplineName']
-                    }
-
-    return institutions, r_person_institution, 
-
+    return institutions, r_patent_institution, r_person_institution 
