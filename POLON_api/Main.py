@@ -1,6 +1,5 @@
 import mysql.connector   
 import io
-from Downloading_Manager import Downloading_Manager
 from data_connection_manager import *
 from MySQL_connection import Database 
 
@@ -10,16 +9,23 @@ database = Database()
 
 #database.get_table_statement()
 
-#PATENTS = downloading_manager.save_patents()
-#PERSONS = downloading_manager.save_persons()
-#r_Person_Patent = patents_person_connection(PATENTS, PERSONS)
+PATENTS = downloading_manager.get_patents()
+P_name, P_hash = downloading_manager.get_persons()
 
-#database.add_patents(PATENTS)
-#database.add_persons(PERSONS)
-#database.add_r_patent_person(r_Person_Patent)
+institutions, r_patent_institution, r_person_institution = extract_institutions(PATENTS, P_name)
 
 
-PUBLICATIONS = downloading_manager.save_publications()
+r_Person_Patent = patents_person_connection(PATENTS, P_name, P_hash)
+#publications_person_connection(PATENTS, P_name, P_hash, downloading_manager)
+database.add_institutions(institutions)
+
+database.add_patents(PATENTS)
+database.add_persons(P_name)
+database.add_r_patent_person(r_Person_Patent)
+database.add_r_patent_institution(r_patent_institution)
+database.add_r_person_institution(r_person_institution)
+
+PUBLICATIONS = downloading_manager.get_publications()
 AUTHORS = get_authors_from_publications(PUBLICATIONS)
 r_Publication_Author = publications_authors_connection(PUBLICATIONS, AUTHORS)
 
