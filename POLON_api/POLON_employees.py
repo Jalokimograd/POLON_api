@@ -46,6 +46,7 @@ class Persons:
                                     break
 
 
+            print(len(self.unrecognized_persons) + len(self.recognized_persons))
             if len(matching_persons) > 1: 
                 print("Niewystarczające informacje dla", inventor)
             elif len(matching_persons) == 0:

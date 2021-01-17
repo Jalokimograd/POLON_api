@@ -1,16 +1,25 @@
 CREATE DATABASE `polon` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_polish_ci */
 
-CREATE TABLE `patents` (
- `id` varchar(130) COLLATE utf8_polish_ci NOT NULL,
- `title` text COLLATE utf8_polish_ci NOT NULL,
- `type` text COLLATE utf8_polish_ci NOT NULL,
- `date` date NOT NULL,
+CREATE TABLE `authors` (
+ `id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
+ `name` text COLLATE utf8_polish_ci DEFAULT NULL,
+ `lastName` text COLLATE utf8_polish_ci NOT NULL,
  PRIMARY KEY (`id`)
 ) 
 
-CREATE TABLE `institutions` (
+CREATE TABLE `publications` (
  `id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
- `institutionName` text COLLATE utf8_polish_ci NOT NULL,
+ `title` text COLLATE utf8_polish_ci NOT NULL,
+ `type` text COLLATE utf8_polish_ci DEFAULT NULL,
+ `year` year(4) DEFAULT NULL,
+ PRIMARY KEY (`id`)
+)
+
+CREATE TABLE `patents` (
+ `id` varchar(130) COLLATE utf8_polish_ci NOT NULL,
+ `title` text COLLATE utf8_polish_ci DEFAULT NULL,
+ `type` text COLLATE utf8_polish_ci DEFAULT NULL,
+ `date` date DEFAULT NULL,
  PRIMARY KEY (`id`)
 )
 
@@ -24,16 +33,16 @@ CREATE TABLE `persons` (
  PRIMARY KEY (`id`)
 )
 
-CREATE TABLE `r_person_institution` (
+CREATE TABLE `r_publication_author` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
- `person_id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
- `institution_id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
+ `publication_id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
+ `author_id` varchar(40) COLLATE utf8_polish_ci NOT NULL,
  PRIMARY KEY (`id`),
- KEY `person_id` (`person_id`),
- KEY `institution_id` (`institution_id`),
- CONSTRAINT `r_person_institution_ibfk_1` FOREIGN KEY (`person_id`) REFERENCES `persons` (`id`),
- CONSTRAINT `r_person_institution_ibfk_2` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`)
-)
+ KEY `publication_id` (`publication_id`),
+ KEY `author_id` (`author_id`),
+ CONSTRAINT `r_publication_author_ibfk_1` FOREIGN KEY (`publication_id`) REFERENCES `publications` (`id`),
+ CONSTRAINT `r_publication_author_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`)
+) 
 
 CREATE TABLE `r_patent_person` (
  `id` int(11) NOT NULL AUTO_INCREMENT,

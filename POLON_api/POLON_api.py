@@ -13,7 +13,7 @@ class Patents:
 
     def get_patents(self, publicationDateFrom = '2019-01-01', publicationDateTo = '2020-12-31', inventorFirstName = '', inventorLastName = '', token = ''):
         parameters = {
-        'resultNumbers': 500,
+        'resultNumbers': 100,
         'publicationDateFrom': publicationDateFrom,
         'publicationDateTo': publicationDateTo,
         'inventorFirstName': inventorFirstName,

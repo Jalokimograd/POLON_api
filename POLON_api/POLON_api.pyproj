@@ -21,6 +21,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="data_connection_manager.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Downloading_Manager.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Fuzzy_name_matching.py">
       <SubType>Code</SubType>
     </Compile>
