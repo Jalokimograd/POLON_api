@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PatentDto } from '../../../shared/model/dto/patent/patent.dto';
 import { PatentBrowserHttpService } from '../../../shared/service/patent-browser-http.service';
-import { PatentBrowserFilter } from '../../../shared/model/dto/patent-browser.filter';
+import { BrowserFilter } from '../../../shared/model/dto/browser.filter';
 import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
@@ -10,12 +10,12 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class PatentBrowserDataService {
   public tableDataSubject = new BehaviorSubject<PatentDto[]>([]);
-  private lastLoadedFilter: PatentBrowserFilter;
+  private lastLoadedFilter: BrowserFilter;
 
   constructor(private http: PatentBrowserHttpService) {
   }
 
-  public applyFilter(filter: PatentBrowserFilter): void {
+  public applyFilter(filter: BrowserFilter): void {
     this.http
       .fetchAll(filter)
       .pipe(tap(_ => this.lastLoadedFilter = filter))

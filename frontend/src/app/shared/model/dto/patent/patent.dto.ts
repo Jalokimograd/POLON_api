@@ -1,13 +1,11 @@
-import { UnitDto } from '../unit.dto';
-import { PatentCreatorDto } from './patent-creator.dto';
+import { InstitutionDto } from '../institution.dto';
+import { PatentAuthorDto } from './patent-author.dto';
 
 export interface PatentDto {
-  id: number;
-  number: string;
-  date: Date;
-  country: string;
-  productName: string;
+  id: string;
+  title: string;
   type: string;
-  creators: PatentCreatorDto[];
-  units: UnitDto[];
+  date: Date;
+  authors: PatentAuthorDto[];
+  institutes: InstitutionDto[];
 }

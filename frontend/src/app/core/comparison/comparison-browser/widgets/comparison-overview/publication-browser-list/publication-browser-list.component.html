@@ -1,0 +1,29 @@
+<table mat-table matSort [dataSource]="tableDataSource" class="mat-elevation-z8 w-100">
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Data</th>
+    <td mat-cell *matCellDef="let element">
+      {{element.year | date:'mediumDate'}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Nazwa</b></th>
+    <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+  </ng-container>
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Typ</b></th>
+    <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+  </ng-container>
+  <ng-container matColumnDef="creators">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Twórcy</b></th>
+    <td mat-cell *matCellDef="let element">
+      <div class="d-flex flex-column">
+              <span *ngFor="let element of element.authors">
+        {{element.firstName}} {{element.lastName}}
+      </span>
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PatentBrowserHttpService } from '../../../shared/service/patent-browser-http.service';
-import { PatentBrowserFilter } from '../../../shared/model/dto/patent-browser.filter';
+import { BrowserFilter } from '../../../shared/model/dto/browser.filter';
 import { PatentBrowserDataService } from './patent-browser-data.service';
+import { PublicationBrowserDataService } from './publication-browser-data.service';
 
 @Component({
   selector: 'app-comparison-browser',
@@ -11,14 +12,15 @@ import { PatentBrowserDataService } from './patent-browser-data.service';
 })
 export class ComparisonBrowserComponent implements OnInit {
 
-  constructor(private data: PatentBrowserDataService) {
+  constructor(private patentData: PatentBrowserDataService, private publicationData: PublicationBrowserDataService) {
   }
 
   ngOnInit(): void {
   }
 
-  onFilterChange($event: PatentBrowserFilter): void {
-    this.data.applyFilter($event);
+  onFilterChange($event: BrowserFilter): void {
+    this.patentData.applyFilter($event);
+    this.publicationData.applyFilter($event);
   }
 
   onClearFilter(): void {

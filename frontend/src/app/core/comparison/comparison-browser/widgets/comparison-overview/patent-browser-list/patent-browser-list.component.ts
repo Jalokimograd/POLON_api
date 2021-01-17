@@ -15,7 +15,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 export class PatentBrowserListComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  displayedColumns: string[] = ['number', 'date', 'country', 'productName', 'type', 'creators', 'units'];
+  displayedColumns: string[] = ['date', 'title', 'type', 'creators', 'units'];
   public tableDataSource = new MatTableDataSource<PatentDto>();
 
   constructor(public data: PatentBrowserDataService) {

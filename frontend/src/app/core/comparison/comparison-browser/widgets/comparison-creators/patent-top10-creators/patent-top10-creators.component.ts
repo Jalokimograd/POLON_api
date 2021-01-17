@@ -22,10 +22,10 @@ export class PatentTop10CreatorsComponent implements OnInit {
 
   top10Creators(): Observable<NameValue[]> {
     return this.data.tableDataSubject.pipe(
-      map(x => x.flatMap(e => e.creators)),
+      map(x => x.flatMap(e => e.authors)),
       map(x => {
         return x.reduce(
-          (entryMap, e) => entryMap.set(e.name, [...entryMap.get(e.name) || [], e]),
+          (entryMap, e) => entryMap.set(`${e.firstName} ${e.lastName}`, [...entryMap.get(`${e.firstName} ${e.lastName}`) || [], e]),
           new Map()
         );
       }),
@@ -42,6 +42,5 @@ export class PatentTop10CreatorsComponent implements OnInit {
       map(e => e.sort((a, b) => b.value - a.value)),
       // map(e => e.slice(0, 10))
     );
-
   }
 }

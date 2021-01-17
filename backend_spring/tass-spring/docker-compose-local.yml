@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  database:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3312:3306
+    volumes:
+      - ./docker/db-data:/var/lib/mysql
+      - ./docker/db-logs:/var/log/mysql
+      - ./mysql.cnf:/etc/mysql/mysql.conf.d/mysql.cnf
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - "node.role==manager"
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          memory: 3072M
+          cpus: '0.75'
+    env_file: ./docker/mysql.env
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 30s
+      retries: 10
+      interval: 60s
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 0
+      UPLOAD_LIMIT: 2048M
+    restart: always
+    ports:
+      - 8185:80
+    networks:
+      - backend
+    depends_on:
+      - database
+networks:
+  backend:

@@ -19,10 +19,15 @@ import { HorizontalBarComponent } from './comparison-browser/shared/horizontal-b
 import { ComparisonGraphComponent } from './comparison-browser/widgets/comparison-graph/comparison-graph.component';
 import { GraphWrapperComponent } from './comparison-browser/widgets/comparison-graph/graph-wrapper/graph-wrapper.component';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { PublicationBrowserListComponent } from './comparison-browser/widgets/comparison-overview/publication-browser-list/publication-browser-list.component';
+import { PublicationTop10CreatorsComponent } from './comparison-browser/widgets/comparison-creators/publication-top10-creators/publication-top10-creators.component';
+import { PatentGraphComponent } from './comparison-browser/widgets/comparison-graph/patent-graph/patent-graph.component';
+import { PublicationGraphComponent } from './comparison-browser/widgets/comparison-graph/publication-graph/publication-graph.component';
+import { PublicationTop10UnitsComponent } from './comparison-browser/widgets/comparison-units/publication-top10-units/publication-top10-units.component';
 
 
 @NgModule({
-  declarations: [ComparisonBrowserComponent, BrowserFilterComponent, PatentBrowserListComponent, PatentTop10CreatorsComponent, PatentTop10UnitsComponent, ComparisonOverviewComponent, ComparisonCreatorsComponent, ComparisonUnitsComponent, NestedComponentsComponent, HorizontalBarComponent, ComparisonGraphComponent, GraphWrapperComponent],
+  declarations: [ComparisonBrowserComponent, BrowserFilterComponent, PatentBrowserListComponent, PatentTop10CreatorsComponent, PatentTop10UnitsComponent, ComparisonOverviewComponent, ComparisonCreatorsComponent, ComparisonUnitsComponent, NestedComponentsComponent, HorizontalBarComponent, ComparisonGraphComponent, GraphWrapperComponent, PublicationBrowserListComponent, PublicationTop10CreatorsComponent, PatentGraphComponent, PublicationGraphComponent, PublicationTop10UnitsComponent],
   imports: [
     CommonModule,
     SharedModule,

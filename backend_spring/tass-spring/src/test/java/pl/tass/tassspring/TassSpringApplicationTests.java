@@ -1,0 +1,13 @@
+package pl.tass.tassspring;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class TassSpringApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

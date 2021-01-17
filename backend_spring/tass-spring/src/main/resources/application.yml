@@ -1,0 +1,34 @@
+server:
+  servlet:
+    context-path: /api
+spring:
+  datasource:
+    password: QPsadas3sXTbYAD7NEbRUHmuT3u6YcgC8PJ5jdsadsa
+    url: jdbc:mysql://localhost:3312/tass?autoReconnect=true&serverTimezone=Europe/Warsaw&useUnicode=yes&characterEncoding=UTF-8
+    username: tass
+    hikari:
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 50000
+      max-lifetime: 180000
+      maximum-pool-size: 20
+    dbcp2:
+      test-on-borrow: true
+    tomcat:
+      test-while-idle: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+logging:
+  level:
+    org:
+      hibernate: info
+      springframework:
+        security: TRACE
+        web: TRACE
+
+
+frontend:
+  url: http://localhost:4200
