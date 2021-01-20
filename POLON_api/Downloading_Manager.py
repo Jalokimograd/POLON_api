@@ -15,7 +15,7 @@ class Downloading_Manager:
         for k, v in persons_by_name.items():
             for person in v:
                 person['patents'] = []
-                person['author_id'] = ''
+                person['author_id'] = None
                 container[person['id']] = person
         return(container)
 #===============================================================================================
@@ -44,32 +44,6 @@ class Downloading_Manager:
 
         return(container)
 
-
-    def download_short_data(self, url, parameters, _get_id):
-        container = {}  
-        connor = self.actualSession.get(url, params=parameters).json()
-        
-        while True:    
-            parameters['token'] = connor['pagination']['token']
-
-            # brak danych na stronie
-            if parameters['token'] is None:    
-                break
-
-            for result in connor['results']:
-                id = _get_id(result)
-                if id not in container:
-                    container[id] = []
-                container[id].append(result)
-                
-            response = self.actualSession.get(url, params=parameters)
-            try:
-                connor = response.json()
-            except:
-                print("problem z pobieraniem")
-
-
-        return(container)
 #===============================================================================================                
 
 
@@ -94,17 +68,16 @@ class Downloading_Manager:
         _publication_id = lambda x : x['objectId']
         parameters = {
             'resultNumbers': 100,
-            'yearFrom': '2019',
+            'yearFrom': '2016',
             'yearTo': '',
             'firstName': '',
-            'lastName': lastName,
+            'lastName': '',
             'token': ''
             }
         
         #print("Pobieranie Publikacji")
-        if lastName == '':
-            return(self.download_data(url, parameters, _publication_id))
-        return(self.download_short_data(url, parameters, _publication_id))
+
+        return(self.download_data(url, parameters, _publication_id))
                 
 
     def get_persons(self):
@@ -120,6 +93,4 @@ class Downloading_Manager:
         print("Pobieranie Osób")
         persons_by_name = self.download_data(url, parameters, _person_id)
         persons_by_hash = self.person_hash(persons_by_name)
-        return(persons_by_name, persons_by_hash)
-
 
