@@ -51,9 +51,9 @@ def patents_person_connection(patents, persons, persons_hash_list):
                     #print('brak osoby w bazie')
                     new_person = {
                         'id': hash_key,
-                        'calculatedEduLevel': '',
+                        'calculatedEduLevel': None,
                         'patents': [patent['protectionUuid']],
-                        'author_id': '',
+                        'author_id': None,
                         'personalData': {
                             'firstName': inventor['firstName'],
                             'middleName': inventor['middleName'],
@@ -113,16 +113,16 @@ def get_authors_from_publications(publications):
     return(container)
 
 
-def get_similarity(person_data, author_name):
+def get_similarity(person, author_name):
 
     n = len(author_name.split())
-    Str1 = to_str(person_data['firstName'])
+    Str1 = to_str(person['first_name'])
     Str2 = author_name
 
     if n > 1:
-        Str1 = Str1 + ' ' + to_str(person_data['middleName'])
+        Str1 = Str1 + ' ' + to_str(person['middle_name'])
     if n > 2:
-        Str1 = Str1 + ' ' + to_str(person_data['lastNamePrefix'])
+        Str1 = Str1 + ' ' + to_str(person['last_name_prefix'])
 
     Ratio = fuzz.ratio(Str1.lower(),Str2.lower())
     Partial_Ratio = fuzz.partial_ratio(Str1.lower(),Str2.lower())
@@ -157,7 +157,7 @@ def get_connected_persons(person, patents):
 
 
 
-def publications_person_connection(patents, persons, persons_hash_list, downloading_manager):
+def old_publications_person_connection(patents, persons, persons_hash_list, downloading_manager):
 
     print("Łączenie autorów patentów z autorami publikacji")
     with tqdm(total=len(persons_hash_list)) as pbar:
@@ -203,6 +203,58 @@ def publications_person_connection(patents, persons, persons_hash_list, download
                 res = max(potential_publications, key = lambda i : i[1])
                 if res[1] > 0:               
                     person['author_id'] = res[2]
+    return()
+
+def persons_authors_connection(database):
+
+    
+    persons = database.get_persons()
+
+    print("Łączenie autorów patentów z autorami publikacji")
+    for limes in range(15, 2, -1):
+        print("przebieg dla ograniczenia powiązania: ", limes)
+        actualized_persons = {}
+        with tqdm(total=len(persons)) as pbar:
+            for person in persons:
+
+                pbar.update(1)
+
+                connected_persons = database.get_sub_authors_patents(person['id'])
+
+                if len(connected_persons) == 0:
+                    continue
+
+                potential_authors = []
+
+                authors = database.get_authors_by_lastName(person['last_name'])
+                for author in authors:
+                    if (get_similarity(person, to_str(author['name'])) == 100):
+                        potential_authors.append([author, 0])
+            
+                if len(potential_authors) == 0:
+                    continue
+
+                for potential_author in potential_authors:
+                    author = potential_author[0]
+                    connected_authors = database.get_sub_authors_publications(author['id'])
+
+                    for sub_person, sub_author in product(connected_persons, connected_authors): 
+                        if potential_author[1] > limes*5:
+                            break
+                        if sub_person['publication_author_id'] == sub_author['id']:
+                            potential_author[1] += 3
+                        if to_str(sub_person['last_name']) == to_str(sub_author['last_name']) and (get_similarity(sub_person, to_str(sub_author['name'])) == 100):
+                            potential_author[1] += 1
+
+                res = max(potential_authors, key = lambda i : i[1])
+                if res[1] > limes:
+                    if((person['connection_power'] is None) or (person['connection_power'] < res[1])):
+                        person['publication_author_id'] = res[0]['id']
+                        person['connection_power'] = res[1]
+                        actualized_persons[person['id']] = {"id": person['id'], "author_id": person['publication_author_id'], "connection_power": person['connection_power']}
+
+        print("powiązano %s osób " % len(actualized_persons))
+        database.update_persons(actualized_persons)
 
 
 def extract_institutions(patents, persons):
