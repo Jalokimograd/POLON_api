@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     password: QPsadas3sXTbYAD7NEbRUHmuT3u6YcgC8PJ5jdsadsa
-    url: jdbc:mysql://localhost:3312/tass?autoReconnect=true&serverTimezone=Europe/Warsaw&useUnicode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3312/tass?autoReconnect=true&serverTimezone=Europe/Warsaw&useUnicode=yes&characterEncoding=UTF-8&zerodatetimebehavior=Converttonull
     username: tass
     hikari:
       connection-test-query: SELECT 1

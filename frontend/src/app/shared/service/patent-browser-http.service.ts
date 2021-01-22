@@ -6,6 +6,8 @@ import { PatentDto } from '../model/dto/patent/patent.dto';
 import { PatentAuthorDto } from '../model/dto/patent/patent-author.dto';
 import { InstitutionDto } from '../model/dto/institution.dto';
 import { BrowserFilterDTO } from '../model/dto/browser.dto.filter';
+import { PatentResultDto } from '../model/dto/patent/patent-result.dto';
+import { GraphDto } from '../model/dto/graph/graph.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +20,21 @@ export class PatentBrowserHttpService {
       .http
       .get<InstitutionDto[]>('/api/patent/institutes');
   }
-  public fetchAll(filter: BrowserFilter): Observable<PatentDto[]> {
+  public fetchAllGraph(filter: BrowserFilter): Observable<GraphDto> {
     const filterDto = this.mapFilterToDTO(filter);
     Object.keys(filterDto).forEach(key => filterDto[key] === undefined ? delete filterDto[key] : {});
 
     return this
       .http
-      .get<PatentDto[]>('/api/patent/all', {params: filterDto as any});
+      .get<GraphDto>('/api/patent/graph/all', {params: filterDto as any});
+  }
+  public fetchAll(filter: BrowserFilter): Observable<PatentResultDto> {
+    const filterDto = this.mapFilterToDTO(filter);
+    Object.keys(filterDto).forEach(key => filterDto[key] === undefined ? delete filterDto[key] : {});
+
+    return this
+      .http
+      .get<PatentResultDto>('/api/patent/all', {params: filterDto as any});
     /*    return of([
           {
             id: 1,

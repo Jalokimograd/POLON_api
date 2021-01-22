@@ -1,15 +1,28 @@
 import { Injectable } from '@angular/core';
-import { PatentDto } from '../../../shared/model/dto/patent/patent.dto';
 import { PatentBrowserHttpService } from '../../../shared/service/patent-browser-http.service';
 import { BrowserFilter } from '../../../shared/model/dto/browser.filter';
 import { tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { PatentResultDto } from '../../../shared/model/dto/patent/patent-result.dto';
+import { NetworkPropDto } from '../../../shared/model/dto/network-prop.dto';
+import { GraphDto } from '../../../shared/model/dto/graph/graph.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatentBrowserDataService {
-  public tableDataSubject = new BehaviorSubject<PatentDto[]>([]);
+  public tableDataSubject = new BehaviorSubject<PatentResultDto>({
+    patents: []
+  } as PatentResultDto);
+  public graphData = new BehaviorSubject<GraphDto>({
+    links: [], nodes: [], networkProp: {
+      avgClustering: 0.0,
+      avgDensity: 0.0,
+      avgVertexGrade: 0.0,
+      grape: 0.0
+    } as NetworkPropDto
+  } as GraphDto);
+
   private lastLoadedFilter: BrowserFilter;
 
   constructor(private http: PatentBrowserHttpService) {

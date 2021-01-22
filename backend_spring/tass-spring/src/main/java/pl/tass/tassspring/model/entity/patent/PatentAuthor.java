@@ -24,6 +24,8 @@ public class PatentAuthor {
 
     private String calculatedEduLevel;
 
+    private Integer connectionPower;
+
     @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "patent_id")

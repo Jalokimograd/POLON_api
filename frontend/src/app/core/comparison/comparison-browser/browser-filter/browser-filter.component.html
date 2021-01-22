@@ -18,7 +18,7 @@
         [removable]="true"
         [value]="unit"
         (removed)="removeUnit(unit)">
-        {{unit.name}}
+        {{unit.title}}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
       <input
@@ -30,9 +30,24 @@
     </mat-chip-list>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
       <mat-option *ngFor="let unit of filteredUnits | async" [value]="unit">
-        {{unit.name}}
+        {{unit.title}}
       </mat-option>
     </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Nazwiska autorów</mat-label>
+    <mat-chip-list #chipAuthorList aria-label="Nazwiska autorów">
+      <mat-chip *ngFor="let name of selectedAuthorNames" [selectable]="false"
+                [removable]="true" (removed)="removeAuthor(name)">
+        {{name}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Wpisz nazwisko..."
+             [matChipInputFor]="chipAuthorList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="true"
+             (matChipInputTokenEnd)="addAuthor($event)">
+    </mat-chip-list>
   </mat-form-field>
   <div class="row text-center" *ngIf="filtersForm.hasError('range')">
     <div class="col-12">

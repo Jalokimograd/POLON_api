@@ -4,6 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { PatentDto } from '../../../../../../shared/model/dto/patent/patent.dto';
 import { PatentBrowserDataService } from '../../../patent-browser-data.service';
+import { PublicationDto } from '../../../../../../shared/model/dto/publication/publication.dto';
+import { PublicationBrowserDataService } from '../../../publication-browser-data.service';
 
 @Component({
   selector: 'app-publication-browser-list',
@@ -14,12 +16,12 @@ export class PublicationBrowserListComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   displayedColumns: string[] = ['date', 'title', 'type', 'creators'];
-  public tableDataSource = new MatTableDataSource<PatentDto>();
+  public tableDataSource = new MatTableDataSource<PublicationDto>();
 
-  constructor(public data: PatentBrowserDataService) {
+  constructor(public data: PublicationBrowserDataService) {
     data
       .tableDataSubject
-      .subscribe(e => this.tableDataSource.data = e);
+      .subscribe(e => this.tableDataSource.data = e.publications);
   }
 
   ngOnInit(): void {

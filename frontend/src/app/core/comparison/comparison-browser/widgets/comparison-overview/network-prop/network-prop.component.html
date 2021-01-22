@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-6">
+    <mat-card>
+      <mat-card-title>Średnia gęstość</mat-card-title>
+      <mat-card-content>{{networkProp.avgDensity | number: '1.4' }}</mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-6">
+    <mat-card>
+      <mat-card-title>Średni wsp. klasteryzacji</mat-card-title>
+      <mat-card-content>{{networkProp.avgClustering | number: '1.4'}}</mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="row mt-1">
+  <div class="col-6">
+    <mat-card>
+      <mat-card-title>Współczynnik gronowania</mat-card-title>
+      <mat-card-content>{{networkProp.grape | number: '1.4'}}</mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-6">
+    <mat-card>
+      <mat-card-title>Średni stopień wierzchołka</mat-card-title>
+      <mat-card-content>{{networkProp.avgVertexGrade | number: '1.4'}}</mat-card-content>
+    </mat-card>
+  </div>
+</div>

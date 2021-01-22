@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PublicationBrowserDataService } from '../../../publication-browser-data.service';
 
 @Component({
   selector: 'app-publication-graph',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PublicationGraphComponent implements OnInit {
 
-  constructor() { }
+  constructor(public data: PublicationBrowserDataService) { }
 
   ngOnInit(): void {
   }

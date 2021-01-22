@@ -5,7 +5,7 @@ import { FromToValidator } from '../../../../shared/validator/from-to.validator'
 import { InstitutionDto } from '../../../../shared/model/dto/institution.dto';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { filter, map } from 'rxjs/operators';
 import { PatentBrowserHttpService } from '../../../../shared/service/patent-browser-http.service';
@@ -22,19 +22,20 @@ export class BrowserFilterComponent implements OnInit {
   public filtersForm: FormGroup;
   public selectedUnits: InstitutionDto[] = [];
   unitCtrl = new FormControl();
-  allInstitutes: InstitutionDto[] = [{id: '1', name: 'Politechnika Warszawska'} as InstitutionDto, {
-    id: '2',
-    name: 'Uniwersytet Gdański'
-  }];
+  allInstitutes: BehaviorSubject<InstitutionDto[]> = new BehaviorSubject<InstitutionDto[]>([]);
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredUnits: Observable<InstitutionDto[]>;
 
   @ViewChild('unitInput') unitInput: ElementRef<HTMLInputElement>;
 
+  // author names section
+  public selectedAuthorNames: string[] = [];
+
+
   constructor(private fb: FormBuilder, private http: PatentBrowserHttpService) {
     this.filteredUnits = this.unitCtrl.valueChanges.pipe(
       filter(v => typeof v === 'string'),
-      map((unit: string | null) => unit ? this._filter(unit) : this.allInstitutes));
+      map((unit: string | null) => unit ? this._filter(unit) : this.allInstitutes.getValue()));
   }
 
 
@@ -85,10 +86,34 @@ export class BrowserFilterComponent implements OnInit {
   private _filter(value: string): InstitutionDto[] {
     const filterValue = value.toLowerCase();
 
-    return this.allInstitutes.filter(unit => unit.name.toLowerCase().indexOf(filterValue) === 0);
+    return this.allInstitutes.getValue().filter(unit => unit.title.toLowerCase().indexOf(filterValue) === 0);
   }
 
   private loadInstitutes(): void {
-    this.http.fetchAllInstitutes().subscribe(e => this.allInstitutes = e);
+    this.http.fetchAllInstitutes().subscribe(e => this.allInstitutes.next(e));
+  }
+
+  removeAuthor(name: string): void {
+    const index = this.selectedAuthorNames.indexOf(name);
+
+    if (index >= 0) {
+      this.selectedAuthorNames.splice(index, 1);
+    }
+  }
+
+  addAuthor($event: MatChipInputEvent): void {
+    const input = $event.input;
+    const value = $event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.selectedAuthorNames.push(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
   }
 }

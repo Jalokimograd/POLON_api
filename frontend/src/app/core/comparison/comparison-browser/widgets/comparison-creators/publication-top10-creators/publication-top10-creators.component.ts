@@ -23,6 +23,7 @@ export class PublicationTop10CreatorsComponent implements OnInit {
 
   top10Creators(): Observable<NameValue[]> {
     return this.data.tableDataSubject.pipe(
+      map(x => x.publications),
       map(x => x.flatMap(e => e.authors)),
       map(x => {
         return x.reduce(

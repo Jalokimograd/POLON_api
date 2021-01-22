@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PatentBrowserDataService } from '../../patent-browser-data.service';
+import { PublicationBrowserDataService } from '../../publication-browser-data.service';
 
 @Component({
   selector: 'app-comparison-overview',
@@ -7,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ComparisonOverviewComponent implements OnInit {
 
-  constructor() { }
+  constructor(public patentData: PatentBrowserDataService, public pubsData: PublicationBrowserDataService) { }
 
   ngOnInit(): void {
   }

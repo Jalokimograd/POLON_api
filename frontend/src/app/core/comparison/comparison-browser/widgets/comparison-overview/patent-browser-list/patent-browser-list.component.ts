@@ -21,7 +21,7 @@ export class PatentBrowserListComponent implements OnInit {
   constructor(public data: PatentBrowserDataService) {
     data
       .tableDataSubject
-      .subscribe(e => this.tableDataSource.data = e);
+      .subscribe(e => this.tableDataSource.data = e.patents);
   }
 
   ngOnInit(): void {

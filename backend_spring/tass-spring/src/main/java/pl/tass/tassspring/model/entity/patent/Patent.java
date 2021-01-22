@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import pl.tass.tassspring.model.dto.patent.InstitutionDto;
 import pl.tass.tassspring.model.dto.patent.PatentAuthorDTO;
 import pl.tass.tassspring.model.entity.publication.PublicationAuthor;
@@ -25,10 +27,13 @@ public class Patent {
     private String type;
     private LocalDate date;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @Fetch(value = FetchMode.SUBSELECT)
 //    @OneToMany(mappedBy = "patent", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<PatentAuthor> authors;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Institution> institutions;
 
     public boolean hasOneOfInstitute(List<String> oneOfInstitutes) {

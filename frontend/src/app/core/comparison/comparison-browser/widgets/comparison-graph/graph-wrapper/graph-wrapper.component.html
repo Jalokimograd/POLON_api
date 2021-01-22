@@ -3,31 +3,8 @@
   legend="true"
   [curve]="curve"
   [draggingEnabled]="false"
-  [links]="[
-    {
-      id: 'a',
-      source: '1',
-    target: '2',
-      label: ''
-    }, {
-      id: 'b',
-      source: '1',
-      target: '3',
-      label: ''
-    }
-  ]"
-  [nodes]="[
-    {
-      id: '1',
-      label: 'Kalisz'
-    }, {
-      id: '2',
-      label: 'Nowak'
-    }, {
-      id: '3',
-      label: 'Kowalski'
-    }
-  ]"
+  [links]="links"
+  [nodes]="nodes"
 >
   <ng-template #nodeTemplate let-node>
     <svg:g class="node">

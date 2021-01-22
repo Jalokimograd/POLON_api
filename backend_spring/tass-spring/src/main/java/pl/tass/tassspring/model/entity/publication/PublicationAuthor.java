@@ -27,7 +27,7 @@ public class PublicationAuthor {
 //    @JoinColumn(name = "publication_id")
     private List<Publication> publications;
 
-    @OneToOne(optional = true, mappedBy = "publicationAuthor")
+    @OneToOne(optional = true, mappedBy = "publicationAuthor", fetch = FetchType.LAZY)
     @JoinColumn(name = "patent_author_id")
     private PatentAuthor patentAuthor;
 }

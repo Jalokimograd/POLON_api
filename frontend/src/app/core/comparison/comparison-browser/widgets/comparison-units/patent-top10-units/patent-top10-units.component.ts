@@ -21,10 +21,11 @@ export class PatentTop10UnitsComponent implements OnInit {
 
   top10Units(): Observable<NameValue[]> {
     return this.data.tableDataSubject.pipe(
+      map(x => x.patents),
       map(x => x.flatMap(e => e.institutes)),
       map(x => {
         return x.reduce(
-          (entryMap, e) => entryMap.set(e.name, [...entryMap.get(e.name) || [], e]),
+          (entryMap, e) => entryMap.set(e.title, [...entryMap.get(e.title) || [], e]),
           new Map()
         );
       }),

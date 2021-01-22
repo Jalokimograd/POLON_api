@@ -24,10 +24,11 @@ import { PublicationTop10CreatorsComponent } from './comparison-browser/widgets/
 import { PatentGraphComponent } from './comparison-browser/widgets/comparison-graph/patent-graph/patent-graph.component';
 import { PublicationGraphComponent } from './comparison-browser/widgets/comparison-graph/publication-graph/publication-graph.component';
 import { PublicationTop10UnitsComponent } from './comparison-browser/widgets/comparison-units/publication-top10-units/publication-top10-units.component';
+import { NetworkPropComponent } from './comparison-browser/widgets/comparison-overview/network-prop/network-prop.component';
 
 
 @NgModule({
-  declarations: [ComparisonBrowserComponent, BrowserFilterComponent, PatentBrowserListComponent, PatentTop10CreatorsComponent, PatentTop10UnitsComponent, ComparisonOverviewComponent, ComparisonCreatorsComponent, ComparisonUnitsComponent, NestedComponentsComponent, HorizontalBarComponent, ComparisonGraphComponent, GraphWrapperComponent, PublicationBrowserListComponent, PublicationTop10CreatorsComponent, PatentGraphComponent, PublicationGraphComponent, PublicationTop10UnitsComponent],
+  declarations: [ComparisonBrowserComponent, BrowserFilterComponent, PatentBrowserListComponent, PatentTop10CreatorsComponent, PatentTop10UnitsComponent, ComparisonOverviewComponent, ComparisonCreatorsComponent, ComparisonUnitsComponent, NestedComponentsComponent, HorizontalBarComponent, ComparisonGraphComponent, GraphWrapperComponent, PublicationBrowserListComponent, PublicationTop10CreatorsComponent, PatentGraphComponent, PublicationGraphComponent, PublicationTop10UnitsComponent, NetworkPropComponent],
   imports: [
     CommonModule,
     SharedModule,

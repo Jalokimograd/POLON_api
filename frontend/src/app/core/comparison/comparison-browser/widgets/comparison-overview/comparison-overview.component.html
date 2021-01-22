@@ -1,4 +1,10 @@
 <app-nested-components>
-  <app-patent-browser-list slot="patent"></app-patent-browser-list>
-  <app-publication-browser-list slot="publication"></app-publication-browser-list>
+  <div class="d-flex flex-column" slot="patent">
+    <app-network-prop *ngIf="pubsData.graphData | async as pubsData" [networkProp]="pubsData.networkProp"></app-network-prop>
+    <app-patent-browser-list></app-patent-browser-list>
+  </div>
+  <div class="d-flex flex-column" slot="publication">
+    <app-network-prop *ngIf="patentData.graphData | async as patentData" [networkProp]="patentData.networkProp"></app-network-prop>
+    <app-publication-browser-list></app-publication-browser-list>
+  </div>
 </app-nested-components>

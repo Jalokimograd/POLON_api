@@ -3,8 +3,11 @@ package pl.tass.tassspring.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.tass.tassspring.model.dto.BrowserFilter;
+import pl.tass.tassspring.model.dto.NetworkPropDTO;
+import pl.tass.tassspring.model.dto.graph.GraphDTO;
 import pl.tass.tassspring.model.dto.patent.InstitutionDto;
 import pl.tass.tassspring.model.dto.patent.PatentDTO;
+import pl.tass.tassspring.model.dto.patent.PatentResultDTO;
 import pl.tass.tassspring.model.entity.patent.Patent;
 import pl.tass.tassspring.repository.InstitutionRepository;
 import pl.tass.tassspring.repository.PatentRepository;
@@ -14,26 +17,37 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class PatentService {
+public class PatentService implements EntityService<PatentResultDTO> {
     private PatentRepository patentRepository;
     private InstitutionRepository institutionRepository;
 
     public List<InstitutionDto> getAllInstitutions() {
         return institutionRepository
-                .findDistinctByTitleNotIn(List.of())
+                .findAll()
                 .stream()
                 .map(e -> InstitutionDto.builder().title(e.getTitle()).id(e.getId()).build())
                 .collect(Collectors.toList());
     }
 
-    public List<PatentDTO> getAllByFilter(BrowserFilter filter) {
+    public PatentResultDTO getAllByFilter(BrowserFilter filter) {
+        return PatentResultDTO
+                .builder()
+                .patents(getPatentsByFilter(filter))
+                .build();
+    }
+    // TODO
+    public NetworkPropDTO getNetworkPropByFilter(BrowserFilter filter) {
+        return NetworkPropDTO.builder().avgClustering(0.0).avgDensity(0.0).avgVertexGrade(0.0).grape(0.0).build();
+    }
+
+    private List<PatentDTO> getPatentsByFilter(BrowserFilter filter) {
         List<Patent> result;
         if (filter.getFrom() != null && filter.getTo() != null) {
             result = patentRepository.findAllByDateIsAfterAndDateIsBefore(filter.getFrom(), filter.getTo());
         } else if (filter.getFrom() != null) {
-            result = patentRepository.findAllByDateIsBefore(filter.getFrom());
+            result = patentRepository.findAllByDateIsAfter(filter.getFrom());
         } else if (filter.getTo() != null) {
-            result = patentRepository.findAllByDateIsAfter(filter.getTo());
+            result = patentRepository.findAllByDateIsBefore(filter.getTo());
         } else {
             result = patentRepository.findAll();
         }
@@ -53,5 +67,13 @@ public class PatentService {
                 .authors(e.getAuthorsDTO())
                 .title(e.getTitle())
                 .build()).collect(Collectors.toList());
+    }
+
+    public GraphDTO getGraphByFilter(BrowserFilter filter) {
+        return GraphDTO.builder()
+                .nodes(List.of())
+                .links(List.of())
+                .networkProp(getNetworkPropByFilter(filter))
+                .build();
     }
 }

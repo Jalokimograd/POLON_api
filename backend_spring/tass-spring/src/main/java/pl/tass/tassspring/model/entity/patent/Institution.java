@@ -18,9 +18,9 @@ public class Institution {
     private String id;
     private String title;
 
-    @ManyToMany(mappedBy = "institutions", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy = "institutions", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     private List<Patent> patents;
 
-    @ManyToMany(mappedBy = "institutions", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy = "institutions", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     private List<PatentAuthor> patentAuthors;
 }

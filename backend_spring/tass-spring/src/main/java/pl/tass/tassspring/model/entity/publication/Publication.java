@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import pl.tass.tassspring.model.dto.patent.PatentAuthorDTO;
 import pl.tass.tassspring.model.dto.publication.PublicationAuthorDTO;
 
@@ -24,7 +26,8 @@ public class Publication {
     private String type;
     private LocalDate year;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @Fetch(value = FetchMode.SUBSELECT)
 //    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<PublicationAuthor> authors;
 
