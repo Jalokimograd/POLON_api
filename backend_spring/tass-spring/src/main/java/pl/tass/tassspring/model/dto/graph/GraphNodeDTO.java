@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class GraphNodeDTO {
+    private String id;
+    private String label;
 }
