@@ -85,7 +85,7 @@ public class PatentService implements EntityService<PatentResultDTO> {
     }
     public GraphDTO getGraphByFilter(BrowserFilter filter) {
         PatentGraphService patentGraphService =
-                new PatentGraphService(repository, filter, getAuthorsByFilter(filter));
+                new PatentGraphService(repository, getAuthorsByFilter(filter));
 
 
         patentGraphService.buildGraph();
@@ -93,7 +93,7 @@ public class PatentService implements EntityService<PatentResultDTO> {
         return GraphDTO.builder()
                 .nodes(patentGraphService.getNodes())
                 .links(patentGraphService.getLinks())
-                .networkProp(patentGraphService.getNetworkProp())
+                .networkProp(patentGraphService.calcNetworkProp())
                 .build();
     }
 }
