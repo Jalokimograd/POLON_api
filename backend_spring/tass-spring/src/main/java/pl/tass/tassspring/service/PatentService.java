@@ -9,10 +9,13 @@ import pl.tass.tassspring.model.dto.patent.InstitutionDto;
 import pl.tass.tassspring.model.dto.patent.PatentDTO;
 import pl.tass.tassspring.model.dto.patent.PatentResultDTO;
 import pl.tass.tassspring.model.entity.patent.Patent;
+import pl.tass.tassspring.model.entity.patent.PatentAuthor;
 import pl.tass.tassspring.repository.InstitutionRepository;
-import pl.tass.tassspring.repository.PatentRepository;
+import pl.tass.tassspring.repository.patent.PatentAuthorPatentAuthorRepository;
+import pl.tass.tassspring.repository.patent.PatentRepository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 public class PatentService implements EntityService<PatentResultDTO> {
     private PatentRepository patentRepository;
     private InstitutionRepository institutionRepository;
+    private PatentAuthorPatentAuthorRepository repository;
 
     public List<InstitutionDto> getAllInstitutions() {
         return institutionRepository
@@ -32,32 +36,12 @@ public class PatentService implements EntityService<PatentResultDTO> {
     public PatentResultDTO getAllByFilter(BrowserFilter filter) {
         return PatentResultDTO
                 .builder()
-                .patents(getPatentsByFilter(filter))
+                .patents(getPatentsDtoByFilter(filter))
                 .build();
     }
-    // TODO
-    public NetworkPropDTO getNetworkPropByFilter(BrowserFilter filter) {
-        return NetworkPropDTO.builder().avgClustering(0.0).avgDensity(0.0).avgVertexGrade(0.0).grape(0.0).build();
-    }
 
-    private List<PatentDTO> getPatentsByFilter(BrowserFilter filter) {
-        List<Patent> result;
-        if (filter.getFrom() != null && filter.getTo() != null) {
-            result = patentRepository.findAllByDateIsAfterAndDateIsBefore(filter.getFrom(), filter.getTo());
-        } else if (filter.getFrom() != null) {
-            result = patentRepository.findAllByDateIsAfter(filter.getFrom());
-        } else if (filter.getTo() != null) {
-            result = patentRepository.findAllByDateIsBefore(filter.getTo());
-        } else {
-            result = patentRepository.findAll();
-        }
-        if (filter.getInstitutions() != null && filter.getInstitutions().size() != 0) {
-            result = result
-                    .parallelStream()
-                    .filter(e -> e.hasOneOfInstitute(filter.getInstitutions()))
-                    .collect(Collectors.toList());
-        }
-        // now filter institutes
+    private List<PatentDTO> getPatentsDtoByFilter(BrowserFilter filter) {
+        List<Patent> result = getPatentByFilter(filter);
         return result.parallelStream().map(e -> PatentDTO
                 .builder()
                 .id(e.getId())
@@ -69,11 +53,47 @@ public class PatentService implements EntityService<PatentResultDTO> {
                 .build()).collect(Collectors.toList());
     }
 
+    private List<Patent> getPatentByFilter(BrowserFilter filter) {
+        List<Patent> result;
+        if (filter.getFrom() != null && filter.getTo() != null) {
+            result = patentRepository.findAllByDateIsAfterAndDateIsBefore(filter.getFrom(), filter.getTo());
+        } else if (filter.getFrom() != null) {
+            result = patentRepository.findAllByDateIsAfter(filter.getFrom());
+        } else if (filter.getTo() != null) {
+            result = patentRepository.findAllByDateIsBefore(filter.getTo());
+        } else {
+            result = patentRepository.findAll();
+        }
+        if (filter.getInstitutionsId() != null && filter.getInstitutionsId().size() != 0) {
+            result = result
+                    .parallelStream()
+                    .filter(e -> e.hasOneOfInstitute(filter.getInstitutionsId()))
+                    .collect(Collectors.toList());
+        }
+        if(filter.getAuthorNames() != null && filter.getAuthorNames().size() != 0){
+            result = result
+                    .parallelStream()
+                    .filter(e -> e.hasOneOfAuthor(filter.getAuthorNames()))
+                    .collect(Collectors.toList());
+        }
+        // now filter institutes
+        return result;
+    }
+
+    public Set<PatentAuthor> getAuthorsByFilter(BrowserFilter filter){
+        return getPatentByFilter(filter).stream().flatMap(e -> e.getAuthors().stream()).collect(Collectors.toSet());
+    }
     public GraphDTO getGraphByFilter(BrowserFilter filter) {
+        PatentGraphService patentGraphService =
+                new PatentGraphService(repository, filter, getAuthorsByFilter(filter));
+
+
+        patentGraphService.buildGraph();
+
         return GraphDTO.builder()
-                .nodes(List.of())
-                .links(List.of())
-                .networkProp(getNetworkPropByFilter(filter))
+                .nodes(patentGraphService.getNodes())
+                .links(patentGraphService.getLinks())
+                .networkProp(patentGraphService.getNetworkProp())
                 .build();
     }
 }

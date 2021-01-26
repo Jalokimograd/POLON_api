@@ -10,7 +10,7 @@ import { GraphLinkDto } from '../../../../../../shared/model/dto/graph/graph-lin
 })
 export class GraphWrapperComponent implements OnInit {
 
-  curve = shape.curveBundle.beta(1);
+  // curve = shape.curveBundle.beta(1);
   @Input() public nodes: GraphNodeDto[];
   @Input() public links: GraphLinkDto[];
 

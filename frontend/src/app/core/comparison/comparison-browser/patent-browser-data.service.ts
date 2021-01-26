@@ -14,11 +14,13 @@ export class PatentBrowserDataService {
   public tableDataSubject = new BehaviorSubject<PatentResultDto>({
     patents: []
   } as PatentResultDto);
+
   public graphData = new BehaviorSubject<GraphDto>({
     links: [], nodes: [], networkProp: {
       avgClustering: 0.0,
       avgDensity: 0.0,
       avgVertexGrade: 0.0,
+      globalGrape: 0.0,
       grape: 0.0
     } as NetworkPropDto
   } as GraphDto);
@@ -33,5 +35,9 @@ export class PatentBrowserDataService {
       .fetchAll(filter)
       .pipe(tap(_ => this.lastLoadedFilter = filter))
       .subscribe(e => this.tableDataSubject.next(e));
+
+    this.http
+      .fetchAllGraph(filter)
+      .subscribe(e => this.graphData.next(e));
   }
 }

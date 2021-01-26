@@ -5,5 +5,4 @@ import pl.tass.tassspring.model.dto.NetworkPropDTO;
 
 public interface EntityService<T> {
     T getAllByFilter(BrowserFilter filter);
-    NetworkPropDTO getNetworkPropByFilter(BrowserFilter filter);
 }

@@ -20,6 +20,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
 import { SpinnerInterceptor } from './interceptor/spinner.interceptor';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [],
@@ -49,7 +50,9 @@ import { SpinnerInterceptor } from './interceptor/spinner.interceptor';
     MatSortModule,
     MatCardModule,
     MatPaginatorModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSlideToggleModule
+
   ],
   providers: [
     {

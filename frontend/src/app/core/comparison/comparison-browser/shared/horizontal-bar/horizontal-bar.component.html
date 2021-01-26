@@ -1,8 +1,11 @@
-<div class="px-2 d-flex" style="height: 600px">
-  <div class="w-100 d-flex" *ngIf="data.length > 0">
-    <ngx-charts-bar-horizontal
+<div class="px-2 d-flex" style="height: 900px">
+  <div class="w-100 d-flex overflow-auto" #chartArea *ngIf="data.length > 0" (window:resize)="setViewSize()">
+    <ngx-charts-bar-vertical
+      [view]="view"
       [results]="data"
       [gradient]="gradient"
+      [barPadding]="2"
+      [animations]="false"
       [xAxis]="showXAxis"
       [yAxis]="showYAxis"
       [legend]="showLegend"
@@ -11,7 +14,7 @@
       [xAxisLabel]="xAxisLabel"
       [xAxisTickFormatting]='formatInteger'
       [yAxisLabel]="yAxisLabel">
-    </ngx-charts-bar-horizontal>
+    </ngx-charts-bar-vertical>
   </div>
   <div class="w-100" *ngIf="data.length == 0">
     <h4>Brak danych do wyświetlenia.</h4>

@@ -1,0 +1,17 @@
+.mat-column-title {
+  max-width: 30%;
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.mat-column-creators {
+  min-width: 150px;
+}
+
+.mat-column-units {
+  max-width: 15%;
+}
+.mat-table {
+  height: calc( 100vh - 250px);
+  overflow: auto;
+  width: 100%;
+}

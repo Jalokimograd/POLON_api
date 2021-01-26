@@ -4,6 +4,7 @@ import { HeaderComponent } from '../bootstrap/header/header.component';
 import { CoreRoutingModule } from './core-routing.module';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     CoreRoutingModule,
     SharedModule,
+    FormsModule,
   ],
   exports: [
     RouterModule,

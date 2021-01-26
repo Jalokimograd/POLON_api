@@ -26,7 +26,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@ngneat/until-destroy": "^8.0.3",
     "@swimlane/ngx-charts": "^16.0.0",
-    "@swimlane/ngx-graph": "^7.2.0",
+    "@swimlane/ngx-graph": "8.0.0-rc.1",
     "bootstrap": "^4.5.3",
     "moment": "^2.27.0",
     "ngx-bootstrap": "^6.2.0",

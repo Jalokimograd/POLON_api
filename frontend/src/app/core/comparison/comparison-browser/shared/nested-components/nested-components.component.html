@@ -1,21 +1,21 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12 col-xl-6 ml-xl-0 pl-xl-0">
-      <mat-card>
+  <div class="row min-vh-100">
+    <div class="col-md-12 col-xl-6 ml-xl-0 pl-xl-0 h-100">
+      <mat-card class="h-100">
         <mat-card-title>
           Patenty
         </mat-card-title>
-        <mat-card-content>
+        <mat-card-content class="h-100">
           <ng-content select="[slot=patent]"></ng-content>
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-12 col-xl-6 ml-xl-0 pl-xl-0">
-      <mat-card>
+    <div class="col-md-12 col-xl-6 ml-xl-0 h-100 p-0">
+      <mat-card class="h-100">
         <mat-card-title>
           Publikacje
         </mat-card-title>
-        <mat-card-content>
+        <mat-card-content class="h-100">
           <ng-content select="[slot=publication]"></ng-content>
         </mat-card-content>
       </mat-card>

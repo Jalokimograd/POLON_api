@@ -10,38 +10,36 @@ import pl.tass.tassspring.model.dto.patent.PatentResultDTO;
 import pl.tass.tassspring.model.dto.publication.PublicationDTO;
 import pl.tass.tassspring.model.dto.publication.PublicationResultDTO;
 import pl.tass.tassspring.model.entity.patent.Patent;
+import pl.tass.tassspring.model.entity.patent.PatentAuthor;
 import pl.tass.tassspring.model.entity.publication.Publication;
+import pl.tass.tassspring.model.entity.publication.PublicationAuthor;
 import pl.tass.tassspring.repository.PublicationRepository;
+import pl.tass.tassspring.repository.publication.PublicationAuthorPublicationAuthorRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class PublicationService implements EntityService<PublicationResultDTO>{
+public class PublicationService implements EntityService<PublicationResultDTO> {
+    private PublicationAuthorPublicationAuthorRepository repository;
     private PublicationRepository publicationRepository;
+    private PatentService patentService;
+
     public PublicationResultDTO getAllByFilter(BrowserFilter filter) {
         return PublicationResultDTO
                 .builder()
-                .publications(getPublicationsByFilter(filter))
+                .publications(getPublicationsDTOByFilter(filter))
                 .build();
     }
 
-    private List<PublicationDTO> getPublicationsByFilter(BrowserFilter filter) {
-        List<Publication> result;
+    private List<PublicationDTO> getPublicationsDTOByFilter(BrowserFilter filter) {
+        List<Publication> allByAuthors = getPublicationByFilter(filter);
 
-        if (filter.getFrom() != null && filter.getTo() != null) {
-            result = publicationRepository.findAllByYearIsAfterAndYearIsBefore(filter.getFrom().minusYears(1), filter.getTo().plusYears(1));
-        } else if (filter.getFrom() != null) {
-            result = publicationRepository.findAllByYearIsAfter(filter.getFrom().minusYears(1));
-        } else if (filter.getTo() != null) {
-            result = publicationRepository.findAllByYearIsBefore(filter.getTo().plusYears(1));
-        } else {
-            result = publicationRepository.findAll();
-        }
-        // now filter institutes
-        return result.parallelStream().map(e -> PublicationDTO
+        return allByAuthors.parallelStream().map(e -> PublicationDTO
                 .builder()
                 .id(e.getId())
                 .type(e.getType())
@@ -50,16 +48,40 @@ public class PublicationService implements EntityService<PublicationResultDTO>{
                 .title(e.getTitle())
                 .build()).collect(Collectors.toList());
     }
-    @Override
-    public NetworkPropDTO getNetworkPropByFilter(BrowserFilter filter) {
-        return null;
+
+    private List<Publication> getPublicationByFilter(BrowserFilter filter) {
+        Set<PatentAuthor> authorsByFilter = patentService.getAuthorsByFilter(filter);
+
+        List<Publication> result = publicationRepository
+                .findAllByAuthors(authorsByFilter
+                                          .stream()
+                                          .map(PatentAuthor::getId)
+                                          .collect(Collectors.toList())
+                );
+        if (filter.getFrom() != null) {
+            result = result.stream().filter(e -> e.getYear().isAfter(filter.getFrom().minusYears(1))).collect(Collectors.toList());
+        }
+        if (filter.getTo() != null) {
+            result = result.stream().filter(e -> e.getYear().isBefore(filter.getTo().plusYears(1))).collect(Collectors.toList());
+        }
+        return result;
+    }
+
+    public Set<PublicationAuthor> getAuthorsByFilter(BrowserFilter filter) {
+        return getPublicationByFilter(filter).stream().flatMap(e -> e.getAuthors().stream()).collect(Collectors.toSet());
     }
 
     public GraphDTO getGraphByFilter(BrowserFilter filter) {
+        PublicationGraphService patentGraphService =
+                new PublicationGraphService(repository, filter, getAuthorsByFilter(filter));
+
+
+        patentGraphService.buildGraph();
+
         return GraphDTO.builder()
-                .nodes(List.of())
-                .links(List.of())
-                .networkProp(getNetworkPropByFilter(filter))
+                .nodes(patentGraphService.getNodes())
+                .links(patentGraphService.getLinks())
+                .networkProp(patentGraphService.getNetworkProp())
                 .build();
     }
 }

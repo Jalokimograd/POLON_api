@@ -8,6 +8,7 @@ import pl.tass.tassspring.model.entity.publication.PublicationAuthor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @AllArgsConstructor
@@ -31,10 +32,23 @@ public class PatentAuthor {
 //    @JoinColumn(name = "patent_id")
     private List<Patent> patents;
 
-    @OneToOne(optional = true)
+    @OneToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "publication_author_id")
     private PublicationAuthor publicationAuthor;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<Institution> institutions;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PatentAuthor that = (PatentAuthor) o;
+        return Objects.equals(id, that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

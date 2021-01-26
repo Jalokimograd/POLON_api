@@ -15,11 +15,13 @@ import { GraphDto } from '../model/dto/graph/graph.dto';
 export class PatentBrowserHttpService {
   constructor(private http: HttpClient) {
   }
-  public fetchAllInstitutes(): Observable<InstitutionDto[]>{
+
+  public fetchAllInstitutes(): Observable<InstitutionDto[]> {
     return this
       .http
       .get<InstitutionDto[]>('/api/patent/institutes');
   }
+
   public fetchAllGraph(filter: BrowserFilter): Observable<GraphDto> {
     const filterDto = this.mapFilterToDTO(filter);
     Object.keys(filterDto).forEach(key => filterDto[key] === undefined ? delete filterDto[key] : {});
@@ -28,6 +30,7 @@ export class PatentBrowserHttpService {
       .http
       .get<GraphDto>('/api/patent/graph/all', {params: filterDto as any});
   }
+
   public fetchAll(filter: BrowserFilter): Observable<PatentResultDto> {
     const filterDto = this.mapFilterToDTO(filter);
     Object.keys(filterDto).forEach(key => filterDto[key] === undefined ? delete filterDto[key] : {});
@@ -98,7 +101,8 @@ export class PatentBrowserHttpService {
     return {
       from: filter.from?.toISOString(false),
       to: filter.to?.toISOString(false),
-      institutions: filter?.institutions
+      institutionsId: filter?.institutions.map(e => e.id),
+      authorNames: filter?.authorNames
     } as BrowserFilterDTO;
   }
 }

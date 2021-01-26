@@ -18,6 +18,6 @@ public class BrowserFilter {
     private LocalDate from;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDate to;
-    private List<String> institutions;
+    private List<String> institutionsId;
     private List<String> authorNames;
 }

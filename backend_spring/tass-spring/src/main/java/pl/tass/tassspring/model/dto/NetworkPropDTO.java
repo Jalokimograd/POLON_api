@@ -14,4 +14,6 @@ public class NetworkPropDTO {
     private Double avgClustering; // średni wsp. klasteryzacji
     private Double grape; // wsp. gronowania
     private Double avgVertexGrade; // średni stopień wierzchołka
+
+    private Double globalGrape; //przechodniość
 }

@@ -39,7 +39,7 @@ public class Patent {
     public boolean hasOneOfInstitute(List<String> oneOfInstitutes) {
         return institutions
                 .stream()
-                .anyMatch(e -> oneOfInstitutes.contains(e.getTitle()));
+                .anyMatch(e -> oneOfInstitutes.contains(e.getId()));
     }
 
     public List<PatentAuthorDTO> getAuthorsDTO() {
@@ -50,5 +50,13 @@ public class Patent {
 
     public List<InstitutionDto> getInstitutesDTO() {
         return institutions.stream().map(e -> InstitutionDto.builder().id(e.getId()).title(e.getTitle()).build()).collect(Collectors.toList());
+    }
+
+    public boolean hasOneOfAuthor(List<String> authorNames) {
+        return authors
+                .stream()
+                .map(PatentAuthor::getLastName)
+                .map(String::toLowerCase)
+                .anyMatch(authorNames::contains);
     }
 }

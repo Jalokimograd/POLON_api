@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class GraphLinkDTO {
-    private String id;
+//    private String id;
     private String source;
     private String target;
     private String label;
+    private Integer strength;
 }

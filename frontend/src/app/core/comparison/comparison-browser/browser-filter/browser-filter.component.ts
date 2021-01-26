@@ -35,7 +35,9 @@ export class BrowserFilterComponent implements OnInit {
   constructor(private fb: FormBuilder, private http: PatentBrowserHttpService) {
     this.filteredUnits = this.unitCtrl.valueChanges.pipe(
       filter(v => typeof v === 'string'),
-      map((unit: string | null) => unit ? this._filter(unit) : this.allInstitutes.getValue()));
+      map((unit: string | null) => unit ? this._filter(unit) : this.allInstitutes.getValue()),
+      map(e => e.slice(0, 20))
+    );
   }
 
 
@@ -47,7 +49,9 @@ export class BrowserFilterComponent implements OnInit {
   onSearchClick(): void {
     this.filterChange.emit(
       {
-        ...this.filtersForm.value
+        ...this.filtersForm.value,
+        institutions: this.selectedUnits,
+        authorNames: this.selectedAuthorNames
       } as BrowserFilter
     );
   }

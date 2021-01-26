@@ -3,4 +3,5 @@ export interface NetworkPropDto {
   avgClustering: number; // średni wsp. klasteryzacji
   grape: number; // wsp. gronowania
   avgVertexGrade: number; // średni stopień wierzchołka
+  globalGrape: number; // przechodniość
 }

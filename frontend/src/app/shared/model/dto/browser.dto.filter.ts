@@ -4,5 +4,6 @@ import { InstitutionDto } from './institution.dto';
 export interface BrowserFilterDTO {
   from: string;
   to: string;
-  institutions: string[];
+  institutionsId: string[];
+  authorNames: string[];
 }

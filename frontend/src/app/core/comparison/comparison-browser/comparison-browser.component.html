@@ -1,17 +1,6 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-12 col-xl-2">
-      <mat-card>
-        <mat-card-title>
-          Filtry
-        </mat-card-title>
-        <mat-card-content>
-          <app-browser-filter (filterChange)="onFilterChange($event)"
-                              (clearClick)="onClearFilter()"></app-browser-filter>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-12 col-xl-10 mt-2 mt-xl-0 ml-0 pl-0">
+  <div class="row min-vh-100">
+    <div class="col-12 col-xl-10 mt-2 mt-xl-0 ml-0 pl-0" [class.col-xl-10]="filterHide.isVisible">
       <mat-tab-group>
         <mat-tab label="Przegląd">
           <app-comparison-overview></app-comparison-overview>
@@ -26,6 +15,17 @@
           <app-comparison-units></app-comparison-units>
         </mat-tab>
       </mat-tab-group>
+    </div>
+    <div class="col-12 col-xl-2" *ngIf="filterHide.isVisible">
+      <mat-card>
+        <mat-card-title>
+          Filtry
+        </mat-card-title>
+        <mat-card-content>
+          <app-browser-filter (filterChange)="onFilterChange($event)"
+                              (clearClick)="onClearFilter()"></app-browser-filter>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
 </div>

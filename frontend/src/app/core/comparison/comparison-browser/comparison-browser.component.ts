@@ -3,6 +3,7 @@ import { PatentBrowserHttpService } from '../../../shared/service/patent-browser
 import { BrowserFilter } from '../../../shared/model/dto/browser.filter';
 import { PatentBrowserDataService } from './patent-browser-data.service';
 import { PublicationBrowserDataService } from './publication-browser-data.service';
+import { FilterHideService } from '../../../shared/filter-hide.service';
 
 @Component({
   selector: 'app-comparison-browser',
@@ -12,7 +13,7 @@ import { PublicationBrowserDataService } from './publication-browser-data.servic
 })
 export class ComparisonBrowserComponent implements OnInit {
 
-  constructor(private patentData: PatentBrowserDataService, private publicationData: PublicationBrowserDataService) {
+  constructor(private patentData: PatentBrowserDataService, private publicationData: PublicationBrowserDataService, public filterHide: FilterHideService) {
   }
 
   ngOnInit(): void {

@@ -35,7 +35,8 @@ export class PublicationBrowserHttpService {
     return {
       from: filter.from?.toISOString(false),
       to: filter.to?.toISOString(false),
-      institutions: filter?.institutions
+      institutionsId: filter?.institutions.map(e => e.id),
+      authorNames: filter?.authorNames
     } as BrowserFilterDTO;
   }
 }
