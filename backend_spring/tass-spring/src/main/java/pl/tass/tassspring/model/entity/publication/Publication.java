@@ -26,7 +26,7 @@ public class Publication {
     private String type;
     private LocalDate year;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
 //    @OneToMany(mappedBy = "publication", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<PublicationAuthor> authors;

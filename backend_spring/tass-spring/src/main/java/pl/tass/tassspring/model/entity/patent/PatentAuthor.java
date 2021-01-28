@@ -27,16 +27,16 @@ public class PatentAuthor {
 
     private Integer connectionPower;
 
-    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "patent_id")
     private List<Patent> patents;
 
     @OneToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "publication_author_id")
+    @JoinColumn(name = "publication_author_id", nullable = true)
     private PublicationAuthor publicationAuthor;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Institution> institutions;
 
     @Override
@@ -50,5 +50,18 @@ public class PatentAuthor {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "PatentAuthor{" +
+                "id='" + id + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", lastNamePrefix='" + lastNamePrefix + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", calculatedEduLevel='" + calculatedEduLevel + '\'' +
+                ", connectionPower=" + connectionPower +
+                '}';
     }
 }

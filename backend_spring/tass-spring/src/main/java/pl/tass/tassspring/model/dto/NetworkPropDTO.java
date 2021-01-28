@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NetworkPropDTO {
     private Double avgDensity; // średnia gęstość
-    private Double avgClustering; // średni wsp. klasteryzacji
+    private Double avgPathLength; // średni dł ścieżki
     private Double grape; // wsp. gronowania
     private Double avgVertexGrade; // średni stopień wierzchołka
 

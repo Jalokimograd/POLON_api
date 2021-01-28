@@ -13,11 +13,6 @@ import java.util.Set;
 
 @Repository
 public interface PublicationRepository extends JpaRepository<Publication, String> {
-    List<Publication> findAllByYearIsAfterAndYearIsBefore(LocalDate from, LocalDate to);
-    List<Publication> findAllByYearIsAfter(LocalDate from);
-    List<Publication> findAllByYearIsBefore(LocalDate to);
-
-
-    @Query("SELECT p FROM Publication p JOIN p.authors pa JOIN pa.patentAuthor WHERE pa.patentAuthor.id IN(?1)")
+    @Query("SELECT p FROM Publication p JOIN FETCH p.authors pa JOIN FETCH pa.patentAuthor WHERE pa.patentAuthor.id IN(?1)")
     List<Publication> findAllByAuthors(List<String> authorsId);
 }

@@ -18,15 +18,15 @@ public class PatentAuthorPatentAuthor {
     @Id
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "patent_author_first_id")
     private PatentAuthor first;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "patent_author_second_id ")
     private PatentAuthor second;
 
-    @JoinColumn(name = "strength")
+    @Column(name = "strength")
     private Integer strength;
 
 

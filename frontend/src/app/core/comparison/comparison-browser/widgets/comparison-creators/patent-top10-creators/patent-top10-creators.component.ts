@@ -41,7 +41,7 @@ export class PatentTop10CreatorsComponent implements OnInit {
         return result;
       }),
       map(e => e.sort((a, b) => b.value - a.value)),
-      // map(e => e.slice(0, 10))
+      map(e => e.slice(0, 100))
     );
   }
 }

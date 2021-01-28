@@ -20,14 +20,15 @@ spring:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
+    show-sql: false
+    open-in-view: false
 logging:
   level:
     org:
       hibernate: info
       springframework:
-        security: TRACE
-        web: TRACE
+        security: error
+        web: error
 
 
 frontend:

@@ -2,6 +2,7 @@ package pl.tass.tassspring.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.tass.tassspring.model.dto.BrowserFilter;
 import pl.tass.tassspring.model.dto.NetworkPropDTO;
 import pl.tass.tassspring.model.dto.graph.GraphDTO;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static pl.tass.tassspring.service.PublicationService.MAX_NODES;
+
 @Service
 @AllArgsConstructor
 public class PatentService implements EntityService<PatentResultDTO> {
@@ -32,7 +35,7 @@ public class PatentService implements EntityService<PatentResultDTO> {
                 .map(e -> InstitutionDto.builder().title(e.getTitle()).id(e.getId()).build())
                 .collect(Collectors.toList());
     }
-
+    @Transactional(readOnly = true)
     public PatentResultDTO getAllByFilter(BrowserFilter filter) {
         return PatentResultDTO
                 .builder()
@@ -62,7 +65,7 @@ public class PatentService implements EntityService<PatentResultDTO> {
         } else if (filter.getTo() != null) {
             result = patentRepository.findAllByDateIsBefore(filter.getTo());
         } else {
-            result = patentRepository.findAll();
+            result = patentRepository.findAllWithNested();
         }
         if (filter.getInstitutionsId() != null && filter.getInstitutionsId().size() != 0) {
             result = result
@@ -84,16 +87,16 @@ public class PatentService implements EntityService<PatentResultDTO> {
         return getPatentByFilter(filter).stream().flatMap(e -> e.getAuthors().stream()).collect(Collectors.toSet());
     }
     public GraphDTO getGraphByFilter(BrowserFilter filter) {
-        PatentGraphService patentGraphService =
+        PatentGraphService graphService =
                 new PatentGraphService(repository, getAuthorsByFilter(filter));
 
 
-        patentGraphService.buildGraph();
+        graphService.buildGraph();
 
         return GraphDTO.builder()
-                .nodes(patentGraphService.getNodes())
-                .links(patentGraphService.getLinks())
-                .networkProp(patentGraphService.calcNetworkProp())
+                .nodes(graphService.getNodes().size() >= MAX_NODES ? List.of() : graphService.getNodes())
+                .links(graphService.getNodes().size() >= MAX_NODES ? List.of() : graphService.getLinks())
+                .networkProp(graphService.calcNetworkProp())
                 .build();
     }
 }

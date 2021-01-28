@@ -28,6 +28,7 @@ public class PublicationService implements EntityService<PublicationResultDTO> {
     private PublicationAuthorPublicationAuthorRepository repository;
     private PublicationRepository publicationRepository;
     private PatentService patentService;
+    public static int MAX_NODES = 2200;
 
     public PublicationResultDTO getAllByFilter(BrowserFilter filter) {
         return PublicationResultDTO
@@ -59,29 +60,30 @@ public class PublicationService implements EntityService<PublicationResultDTO> {
                                           .collect(Collectors.toList())
                 );
         if (filter.getFrom() != null) {
-            result = result.stream().filter(e -> e.getYear().isAfter(filter.getFrom().minusYears(1))).collect(Collectors.toList());
+            result = result.parallelStream().filter(e -> e.getYear().isAfter(filter.getFrom().minusYears(1))).collect(Collectors.toList());
         }
         if (filter.getTo() != null) {
-            result = result.stream().filter(e -> e.getYear().isBefore(filter.getTo().plusYears(1))).collect(Collectors.toList());
+            result = result.parallelStream().filter(e -> e.getYear().isBefore(filter.getTo().plusYears(1))).collect(Collectors.toList());
         }
         return result;
     }
 
     public Set<PublicationAuthor> getAuthorsByFilter(BrowserFilter filter) {
-        return getPublicationByFilter(filter).stream().flatMap(e -> e.getAuthors().stream()).collect(Collectors.toSet());
+        return getPublicationByFilter(filter).parallelStream().flatMap(e -> e.getAuthors().stream()).collect(Collectors.toSet());
     }
 
     public GraphDTO getGraphByFilter(BrowserFilter filter) {
-        PublicationGraphService patentGraphService =
+        PublicationGraphService graphService =
                 new PublicationGraphService(repository, filter, getAuthorsByFilter(filter));
 
 
-        patentGraphService.buildGraph();
+        graphService.buildGraph();
 
+        System.out.println(graphService.getNodes().size());
         return GraphDTO.builder()
-                .nodes(patentGraphService.getNodes())
-                .links(patentGraphService.getLinks())
-                .networkProp(patentGraphService.getNetworkProp())
+                .nodes(graphService.getNodes().size() >= MAX_NODES ? List.of() : graphService.getNodes())
+                .links(graphService.getNodes().size() >= MAX_NODES ? List.of() : graphService.getLinks())
+                .networkProp(graphService.calcNetworkProp())
                 .build();
     }
 }

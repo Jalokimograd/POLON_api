@@ -14,6 +14,6 @@ import java.util.Set;
 @Repository
 public interface PublicationAuthorPublicationAuthorRepository extends JpaRepository<PublicationAuthorPublicationAuthor, Long> {
 
-    @Query("SELECT p FROM PublicationAuthorPublicationAuthor p JOIN p.first JOIN p.second WHERE p.first in(?1) OR p.second in(?1)")
+    @Query("SELECT DISTINCT p FROM PublicationAuthorPublicationAuthor p JOIN p.first JOIN p.second WHERE p.first in(?1) OR p.second in(?1)")
     List<PublicationAuthorPublicationAuthor> getConnectedAuthors(Set<PublicationAuthor> authors);
 }

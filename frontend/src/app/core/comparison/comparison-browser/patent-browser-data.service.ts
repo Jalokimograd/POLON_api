@@ -17,7 +17,7 @@ export class PatentBrowserDataService {
 
   public graphData = new BehaviorSubject<GraphDto>({
     links: [], nodes: [], networkProp: {
-      avgClustering: 0.0,
+      avgPathLength: 0.0,
       avgDensity: 0.0,
       avgVertexGrade: 0.0,
       globalGrape: 0.0,

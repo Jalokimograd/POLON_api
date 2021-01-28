@@ -1,11 +1,10 @@
 package pl.tass.tassspring.service.graphProps;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 import org.jgrapht.alg.scoring.ClusteringCoefficient;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import pl.tass.tassspring.model.dto.NetworkPropDTO;
@@ -13,6 +12,8 @@ import pl.tass.tassspring.model.dto.graph.GraphLinkDTO;
 import pl.tass.tassspring.model.dto.graph.GraphNodeDTO;
 
 import java.util.List;
+
+import static pl.tass.tassspring.service.PublicationService.MAX_NODES;
 
 @Data
 public class GraphPropertyCalculator {
@@ -26,34 +27,65 @@ public class GraphPropertyCalculator {
 
     private Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
 
-    public NetworkPropDTO calcNetworkProp(){
+    public NetworkPropDTO calcNetworkProp() {
         buildCalcGraph();
 
         ClusteringCoefficient<String, DefaultEdge> cf = new ClusteringCoefficient<>(graph);
 
+        double globalGrape = cf.getGlobalClusteringCoefficient();
+
         return NetworkPropDTO.builder()
-                .avgClustering(getAvgClustering(cf))
+                .avgPathLength(getAvgPathLength(cf))
                 .avgDensity(getAvgDensity(cf))
                 .avgVertexGrade(parseAvgVertexGrade(cf))
                 .grape(cf.getAverageClusteringCoefficient())
-                .globalGrape(cf.getGlobalClusteringCoefficient())
+                .globalGrape(Double.isNaN(globalGrape) ? 0.0 : globalGrape)
                 .build();
     }
 
 
     private void buildCalcGraph() {
         nodes.forEach(e -> graph.addVertex(e.getId()));
-        links.forEach(e -> graph.addEdge(e.getSource(), e.getTarget()));
+        links.forEach(e -> {
+            try {
+                graph.addEdge(e.getSource(), e.getTarget());
+            } catch (Exception ex) {
+                System.out.println("UPS");
+            }
+        });
+
     }
 
     private Double getAvgDensity(ClusteringCoefficient<String, DefaultEdge> cf) {
         int vertexNum = graph.vertexSet().size();
         double edgesNum = graph.edgeSet().size();
-        return 2*edgesNum/((vertexNum)*(vertexNum-1));
+
+        if(((vertexNum) * (vertexNum - 1)) == 0) {
+            return 0.0;
+        }
+        return 2 * edgesNum / ((vertexNum) * (vertexNum - 1));
     }
 
-    private Double getAvgClustering(ClusteringCoefficient<String, DefaultEdge> cf) {
-        return cf.getScores().values().stream().mapToDouble(e -> e).average().orElse(0);
+    private Double getAvgPathLength(ClusteringCoefficient<String, DefaultEdge> cf) {
+        double averagePathLength = 0;
+        if(graph.vertexSet().size() >= MAX_NODES) {
+            return 0.0;
+        }
+        for (String source : graph.vertexSet()) {
+            for (String destination : graph.vertexSet()) {
+                if (!source.equals(destination)) {
+                    GraphPath<String, DefaultEdge> pathBetween = DijkstraShortestPath.findPathBetween(graph, source, destination);
+                    if (pathBetween != null)
+                        averagePathLength += pathBetween.getLength();
+                }
+            }
+        }
+
+        int vertexNum = graph.vertexSet().size();
+        if((vertexNum * (vertexNum - 1)) == 0){
+            return 0.0;
+        }
+        return averagePathLength / (vertexNum * (vertexNum - 1));
     }
 
     private Double parseAvgVertexGrade(ClusteringCoefficient<String, DefaultEdge> cf) {

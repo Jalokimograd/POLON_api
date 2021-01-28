@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import pl.tass.tassspring.model.dto.patent.InstitutionDto;
 import pl.tass.tassspring.model.dto.patent.PatentAuthorDTO;
 import pl.tass.tassspring.model.entity.publication.PublicationAuthor;
@@ -13,6 +15,7 @@ import pl.tass.tassspring.model.entity.publication.PublicationAuthor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Entity
@@ -27,12 +30,12 @@ public class Patent {
     private String type;
     private LocalDate date;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
 //    @OneToMany(mappedBy = "patent", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<PatentAuthor> authors;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Institution> institutions;
 
@@ -53,6 +56,7 @@ public class Patent {
     }
 
     public boolean hasOneOfAuthor(List<String> authorNames) {
+//        authorNames = authorNames.stream().map(e -> e.toLowerCase(Locale.ROOT)).map(e -> e.trim()).collect(Collectors.toList());
         return authors
                 .stream()
                 .map(PatentAuthor::getLastName)

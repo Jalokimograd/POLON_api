@@ -19,7 +19,7 @@ public class PublicationAuthor {
     private String name;
     private String lastName;
 
-    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
 
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "publication_id")
@@ -40,5 +40,14 @@ public class PublicationAuthor {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "PublicationAuthor{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }

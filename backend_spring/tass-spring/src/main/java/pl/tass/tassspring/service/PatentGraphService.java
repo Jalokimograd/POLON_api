@@ -43,19 +43,20 @@ public class PatentGraphService {
         buildLinks(connectedAuthors);
     }
 
-    public NetworkPropDTO calcNetworkProp(){
+    public NetworkPropDTO calcNetworkProp() {
         return new GraphPropertyCalculator(links, nodes).calcNetworkProp();
     }
+
     private void buildNodes(List<PatentAuthorPatentAuthor> connectedAuthors) {
         this.nodes = connectedAuthors
                 .parallelStream()
-                .flatMap(e -> Stream.of(e.getFirst(), e.getSecond()))
                 .distinct()
+                .flatMap(e -> Stream.of(e.getFirst(), e.getSecond()))
                 .map(e -> GraphNodeDTO.builder()
                         .id(e.getId())
                         .label(e.getFirstName() + " " + e.getLastName())
                         .build()
-                ).collect(Collectors.toList());
+                ).distinct().collect(Collectors.toList());
 
     }
 
@@ -70,6 +71,6 @@ public class PatentGraphService {
                              .target(e.getSecond().getId())
                              .strength(e.getStrength())
                              .build()
-                ).collect(Collectors.toList());
+                ).distinct().collect(Collectors.toList());
     }
 }

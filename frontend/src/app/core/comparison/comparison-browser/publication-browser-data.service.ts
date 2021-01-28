@@ -17,7 +17,7 @@ export class PublicationBrowserDataService {
   } as PublicationResultDto);
   public graphData = new BehaviorSubject<GraphDto>({
     links: [], nodes: [], networkProp: {
-      avgClustering: 0.0,
+      avgPathLength: 0.0,
       avgDensity: 0.0,
       avgVertexGrade: 0.0,
       grape: 0.0,
